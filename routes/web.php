@@ -23,6 +23,8 @@ Route::prefix('users')->controller(UserController::class)->group(function () {
     Route::post('/update', 'update');
     Route::delete('/destroy/{id}', 'destroy');
 
+    Route::get('/getAll', 'getAll');
+
     // Route::get('/customers', 'userCustomers')->name('user-customers.index');
     // Route::post('/customer/register', 'customerRegister');
     // Route::get('/findById/{id}', 'findById');
@@ -40,9 +42,12 @@ Route::get('/dashboard', function () {
 Route::prefix('address')->controller(AddressController::class)->group(function () {
     Route::get('/', 'index');
     Route::get('/create', 'create');
+    Route::get('/findById/{id}', 'findById');
     Route::post('/store', 'store');
     Route::get('/data', 'getAllDataTable')->name('address.data');
     Route::get('/getAddressesGroupedByBlock', 'getAddressesGroupedByBlock');
+    Route::delete('/destroy/{id}', 'destroy');
+    Route::post('/update/{id}', 'update');
 });
 
 Route::prefix('visitors')->controller(VisitorsController::class)->group(function () {
@@ -63,6 +68,8 @@ Route::prefix('visitors')->controller(VisitorsController::class)->group(function
 Route::prefix('companies')->controller(CompaniesController::class)->group(function () {
     Route::get('/', 'index');
     Route::get('/create', 'create');
+    Route::get('/findById/{id}', 'findById');
+    Route::post('/update/{id}', 'update');
     Route::post('/store', 'store');
     Route::get('/data', 'getAllDataTable')->name('companies.data');
     Route::delete('/destroy/{id}', 'destroy');

@@ -18,6 +18,25 @@ class AddressController extends Controller
         return view('page.address.index');
     }
 
+    public function findById($id)
+    {
+        $address = Address::with('user')->find($id);
+
+        if (!$address) {
+            return response()->json([
+                'success' => false,
+                'messages' => 'Data alamat tidak ditemukan'
+            ], 404);
+        }
+
+        // Ambil semua user untuk dropdown
+        $users = User::select('id', 'name', 'nickname')->get();
+
+        return response()->json([
+            'address' => $address,
+            'users' => $users
+        ]);
+    }
     /**
      * Show the form for creating a new resource.
      */
@@ -63,8 +82,8 @@ class AddressController extends Controller
                 return  'Blok ' . $address->block_number . ' No. ' . $address->house_number;
             })
             ->addColumn('action', function ($row) {
-                $btn = '<a href="#" class="btn btn-sm btn-icon btn-info me-2" onclick="edit(\'' . $row->id  . '\')><i class="bi bi-pencil"></i></a>';
-                $btn .= '<a href="#" class="btn btn-sm btn-icon btn-danger"><i class="bi bi-trash fs-4 "></i></a>';
+                $btn = '<a href="#" class="btn btn-sm btn-icon btn-info me-2" onclick="edit(' . $row->id . ')"><i class="bi bi-pencil fs-4"></i></a>';
+                $btn .= '<a href="#" class="btn btn-sm btn-icon btn-danger" onclick="hapus(' . $row->id . ')"><i class="bi bi-trash"></i></a>';
                 return $btn;
             })
             ->rawColumns(['action'])
@@ -150,16 +169,83 @@ class AddressController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Address $address)
+    public function update(Request $request, $id)
     {
-        //
+        $address = Address::find($id);
+
+        if (!$address) {
+            return response()->json([
+                'success' => false,
+                'messages' => 'Data alamat tidak ditemukan'
+            ], 404);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'user_id' => 'required|integer|exists:users,id',
+            'block_number' => 'required|string',
+            'house_number' => 'required|string',
+        ], [
+            'required' => ':attribute harus diisi',
+            'unique' => ':attribute sudah ada',
+            'exists' => ':attribute tidak ada',
+            'string' => ':attribute harus berupa string',
+            'integer' => ':attribute harus berupa angka',
+        ]);
+
+        // Tambahkan validasi kustom
+        $validator->after(function ($validator) use ($request, $address) {
+            $query = Address::where('block_number', $request->block_number)
+                ->where('house_number', $request->house_number)
+                ->where('user_id', $request->user_id);
+
+            // Jika dalam mode update, kecualikan record saat ini
+            if (isset($address) && $address->id) {
+                $query->where('id', '!=', $address->id);
+            }
+
+            if ($query->exists()) {
+                $validator->errors()->add('block_number', 'Kombinasi Blok, Nomor Rumah, dan Pengguna sudah terdaftar');
+            }
+        });
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'messages' => $validator->errors()
+            ], 422);
+        }
+
+        $address->update([
+            'user_id' => $request->user_id,
+            'block_number' => $request->block_number,
+            'house_number' => $request->house_number,
+            'street_name' => $request->street_name,
+        ]);
+
+        if (!$address) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data gagal diubah'
+            ], 500);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data berhasil diubah'
+        ], 200);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Address $address)
+    public function destroy(Address $address, $id)
     {
-        //
+        $address = Address::find($id);
+        $address->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data berhasil dihapus'
+        ]);
     }
 }

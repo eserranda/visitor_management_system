@@ -86,12 +86,84 @@
                 </div>
             </div>
         </div>
+        {{-- @include('page.address.create') --}}
+        @include('page.address.edit')
     @endsection
 
     @push('scripts')
         <script src="{{ asset('assets') }}/plugins/custom/datatables/datatables.bundle.js"></script>
 
         <script>
+            $(document).ready(function() {
+                if ($.fn.select2) {
+                    $('#edit_user_id').select2({
+                        dropdownParent: $('#editModal')
+                    });
+                }
+            });
+
+            function edit(id) {
+                fetch(`/address/findById/` + id)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Data alamat sekarang ada di data.address
+                        document.getElementById('edit_id').value = data.address.id;
+                        document.getElementById('edit_street_name').value = data.address.street_name;
+                        document.getElementById('edit_house_number').value = data.address.house_number;
+
+                        if ($.fn.select2) {
+                            // Set nilai untuk block_number
+                            $('#edit_block_number').val(data.address.block_number).trigger('change');
+
+                            // Kosongkan dropdown users
+                            const userSelect = $('#edit_user_id');
+                            userSelect.empty();
+
+                            // Tambahkan placeholder option
+                            userSelect.append(new Option('', '', false, false));
+
+                            // Tambahkan users ke dropdown
+                            data.users.forEach(user => {
+                                const displayName = user.nickname || user.name;
+                                userSelect.append(new Option(displayName, user.id, false, user.id == data.address
+                                    .user_id));
+                            });
+
+                            // Set nilai yang dipilih
+                            userSelect.val(data.address.user_id).trigger('change');
+                        }
+                    })
+                    .catch(error => console.error(error));
+
+                $('#editModal').modal('show');
+            }
+
+            function hapus(id) {
+                Swal.fire({
+                    title: 'Apakah Anda yakin?',
+                    text: "Data yang dihapus tidak dapat dikembalikan!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya, hapus!',
+                    cancelButtonText: 'Batal',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: "DELETE",
+                            url: "/address/destroy/" + id,
+                            data: {
+                                _token: "{{ csrf_token() }}"
+                            },
+                            success: function(data) {
+                                $('#datatable').DataTable().ajax.reload();
+                                toastr.success('Data berhasil dihapus', 'Success');
+                            }
+                        });
+                    }
+                })
+            }
+
             var KTDatatablesExample = function() {
                 var table;
                 var datatable;

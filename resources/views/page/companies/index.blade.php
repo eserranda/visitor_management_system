@@ -20,7 +20,7 @@
                         </div>
 
                         <div class="card-toolbar flex-row-fluid justify-content-end gap-5">
-                            <div class="w-100 mw-150px">
+                            {{-- <div class="w-100 mw-150px">
                                 <select class="form-select form-select-solid" data-control="select2" data-hide-search="true"
                                     data-placeholder="Status" data-kt-ecommerce-product-filter="status">
                                     <option></option>
@@ -29,7 +29,7 @@
                                     <option value="scheduled">Scheduled</option>
                                     <option value="inactive">Inactive</option>
                                 </select>
-                            </div>
+                            </div> --}}
 
                             <button type="button" class="btn btn-light-primary" data-kt-menu-trigger="click"
                                 data-kt-menu-placement="bottom-end">
@@ -55,6 +55,11 @@
                                 <div class="menu-item px-3">
                                     <a href="#" class="menu-link px-3" data-kt-export="pdf">
                                         PDF
+                                    </a>
+                                </div>
+                                <div class="menu-item px-3">
+                                    <a href="#" class="menu-link px-3" data-kt-export="print">
+                                        Print
                                     </a>
                                 </div>
                             </div>
@@ -92,12 +97,28 @@
         </div>
 
         @include('page.companies.create')
+        @include('page.companies.edit')
     @endsection
 
     @push('scripts')
         <script src="{{ asset('assets') }}/plugins/custom/datatables/datatables.bundle.js"></script>
-
+        <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
         <script>
+            function edit(id) {
+                fetch(`/companies/findById/` + id)
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('edit_id').value = data.id;
+                        document.getElementById('edit_name').value = data.name;
+                        document.getElementById('edit_address').value = data.address;
+                        document.getElementById('edit_phone_number').value = data.phone_number;
+                        document.getElementById('edit_type').checked = data.type == 'transportasi_online' ? true : false;
+                    })
+                    .catch(error => console.error(error));
+                // show modal edit
+                $('#editModal').modal('show');
+            }
+
             function hapus(id) {
                 Swal.fire({
                     title: 'Apakah Anda yakin?',
@@ -117,11 +138,7 @@
                             },
                             success: function(data) {
                                 $('#datatable').DataTable().ajax.reload();
-                                Swal.fire(
-                                    'Terhapus!',
-                                    'Data berhasil dihapus.',
-                                    'success'
-                                )
+                                toastr.success('Data berhasil dihapus', 'Success');
                             }
                         });
                     }
@@ -138,12 +155,24 @@
                     var buttons = new $.fn.dataTable.Buttons(datatable, {
                         buttons: [{
                                 extend: 'excelHtml5',
-                                title: documentTitle
+                                title: documentTitle,
+                                exportOptions: {
+                                    columns: [0, 1, 2, 3]
+                                }
                             },
-
                             {
                                 extend: 'pdfHtml5',
-                                title: documentTitle
+                                title: documentTitle,
+                                exportOptions: {
+                                    columns: [0, 1, 2, 3]
+                                }
+                            },
+                            {
+                                extend: 'print',
+                                title: documentTitle,
+                                exportOptions: {
+                                    columns: [0, 1, 2, 3]
+                                }
                             }
                         ]
                     }).container().appendTo($('#buttons'));
@@ -227,21 +256,6 @@
                                     searchable: false
                                 },
                             ],
-                            buttons: [{
-                                    extend: 'excel',
-                                    className: 'btn btn-secondary',
-                                    exportOptions: {
-                                        columns: [0, 1, 2, 3, 4, 5, 6, 7]
-                                    }
-                                },
-                                {
-                                    extend: 'print',
-                                    className: 'btn btn-secondary',
-                                    exportOptions: {
-                                        columns: [0, 1, 2, 3, 4, 5, 6, 7]
-                                    }
-                                }
-                            ]
                         });
 
                         exportButtons();

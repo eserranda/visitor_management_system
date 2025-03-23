@@ -1,4 +1,4 @@
-<div class="modal fade" tabindex="1" id="addModal" role="dialog" aria-hidden="true">
+<div class="modal fade" tabindex="1" id="editModal" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -12,19 +12,20 @@
                 <!--end::Close-->
             </div>
 
-            <form id="addForm">
+            <form id="editForm">
                 <div class="modal-body">
                     <div class="row mb-5">
                         <div class="col-md-6 fv-row">
                             <label class="required fs-5 fw-semibold mb-2">Nama</label>
+                            <input type="hidden" class="form-control" name="edit_id" id="edit_id" />
                             <input type="text" class="form-control" placeholder="Nama" name="name"
-                                id="name" />
+                                id="edit_name" />
                             <div class="invalid-feedback"> </div>
                         </div>
                         <div class="col-md-6 fv-row">
                             <label class="fs-5 fw-semibold mb-2">Nomor Telepon</label>
                             <input type="number" class="form-control" placeholder="Nomor telepon" name="phone_number"
-                                id="phone_number" />
+                                id="edit_phone_number" />
                             <div class="invalid-feedback"> </div>
 
                         </div>
@@ -33,7 +34,7 @@
                         <div class="col-md-6 fv-row">
                             <div class="form-check">
                                 <input class="form-check-input " type="checkbox" value="transportasi_online"
-                                    name="type" id="type" />
+                                    name="type" id="edit_type" />
                                 <label class="form-check-label" for="type">
                                     Transportasi Online
                                 </label>
@@ -44,7 +45,7 @@
                         <div class="col-md-6 fv-row">
                             <label class="fs-5 fw-semibold mb-2">Alamat</label>
                             <input type="text" class="form-control" placeholder="Alamat" name="address"
-                                id="address" />
+                                id="edit_address" />
                             <div class="invalid-feedback"> </div>
 
                         </div>
@@ -53,7 +54,7 @@
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="submit" class="btn btn-primary">Update</button>
                 </div>
             </form>
         </div>
@@ -62,7 +63,7 @@
 
 @push('scripts')
     <script>
-        document.getElementById('addForm').addEventListener('submit', async (event) => {
+        document.getElementById('editForm').addEventListener('submit', async (event) => {
             event.preventDefault();
 
             const form = event.target;
@@ -71,7 +72,8 @@
             const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
 
             try {
-                const response = await fetch('/companies/store', {
+                const id = document.getElementById('edit_id').value;
+                const response = await fetch(`/companies/update/${id}`, {
                     method: 'POST',
                     headers: {
                         'Accept': 'application/json',
@@ -84,7 +86,7 @@
                 console.log(data);
                 if (!data.success) {
                     Object.keys(data.messages).forEach(fieldName => {
-                        const inputField = document.getElementById(fieldName);
+                        const inputField = document.getElementById('edit_' + fieldName);
                         if (inputField) {
                             inputField.classList.add('is-invalid');
                             if (inputField.nextElementSibling) {
@@ -96,7 +98,7 @@
 
                     const validFields = document.querySelectorAll('.is-invalid');
                     validFields.forEach(validField => {
-                        const fieldName = validField.id;
+                        const fieldName = validField.id.replace('edit_', '');
                         if (!data.messages[fieldName]) {
                             validField.classList.remove('is-invalid');
                             if (validField.nextElementSibling) {
@@ -127,10 +129,11 @@
 
                 form.reset();
                 toastr.success("Data Berhasil di simpan", "Success");
-                // $('#addModal').modal('hide');
-                document.querySelector('[data-bs-dismiss="modal"]').click();
+                $('#editModal').modal('hide');
+                // document.querySelector('[data-bs-dismiss="modal"]').click();
                 $('#datatable').DataTable().ajax.reload();
 
+                // $('#editModal').modal('hide');
             } catch (error) {
                 console.error(error);
             }

@@ -17,6 +17,19 @@ class CompaniesController extends Controller
         return view('page.companies.index');
     }
 
+    public function findById($id)
+    {
+        $companies = Companies::find($id);
+
+        if (!$companies) {
+            return response()->json([
+                'success' => false,
+                'messages' => 'Data perusahaan tidak ditemukan'
+            ], 404);
+        }
+
+        return response()->json($companies);
+    }
     public function getAllDataTable(Request $request)
     {
         $companies = Companies::latest('created_at')->get();
@@ -33,7 +46,7 @@ class CompaniesController extends Controller
                 return $row->address ?? '-';
             })
             ->addColumn('action', function ($row) {
-                $btn = '<a href="#" class="btn btn-sm btn-icon btn-info me-2" onclick="updateStatus(' . $row->id . ')"><i class="bi bi-pencil fs-4"></i></a>';
+                $btn = '<a href="#" class="btn btn-sm btn-icon btn-info me-2" onclick="edit(' . $row->id . ')"><i class="bi bi-pencil fs-4"></i></a>';
                 $btn .= '<a href="#" class="btn btn-sm btn-icon btn-danger" onclick="hapus(' . $row->id . ')"><i class="bi bi-trash"></i></a>';
                 return $btn;
             })
@@ -96,15 +109,7 @@ class CompaniesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Companies $companies)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Companies $companies, $id)
+    public function update(Request $request, $id)
     {
         $companies = Companies::find($id);
 
@@ -115,6 +120,39 @@ class CompaniesController extends Controller
             ], 404);
         }
 
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string',
+        ], [
+            'required' => ':attribute harus diisi',
+            'string' => ':attribute harus berupa string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'messages' => $validator->errors()
+            ], 422);
+        }
+
+        $companies->update([
+            'name' => $request->name,
+            'type' => $request->type,
+            'phone_number' => $request->phone_number,
+            'address' => $request->address,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'messages' => 'Berhasil mengubah data perusahaan'
+        ], 200);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Companies $companies, $id)
+    {
+        $companies = Companies::find($id);
         $companies->delete();
 
         return response()->json([

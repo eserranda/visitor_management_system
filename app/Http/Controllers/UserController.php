@@ -21,6 +21,13 @@ class UserController extends Controller
         return view('page.users.index', compact('users'));
     }
 
+    public function getAll()
+    {
+        $users = User::all();
+
+        return response()->json($users);
+    }
+
     public function getAllDataTable(Request $request)
     {
         $users = User::all();
@@ -28,7 +35,8 @@ class UserController extends Controller
         return DataTables::of($users)
             ->addIndexColumn()
             ->addColumn('action', function ($row) {
-                $btn = '<a href="javascript:void(0)" class="edit btn btn-primary btn-sm">Edit</a> <a href="javascript:void(0)" class="delete btn btn-danger btn-sm">Delete</a>';
+                $btn = '<a href="#" class="btn btn-sm btn-icon btn-info me-2" onclick="edit(' . $row->id . ')"><i class="bi bi-pencil fs-4"></i></a>';
+                $btn .= '<a href="#" class="btn btn-sm btn-icon btn-danger" onclick="hapus(' . $row->id . ')"><i class="bi bi-trash"></i></a>';
                 return $btn;
             })
             ->rawColumns(['action'])
