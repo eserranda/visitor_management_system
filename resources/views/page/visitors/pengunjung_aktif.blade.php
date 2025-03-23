@@ -3,7 +3,7 @@
     <link href="{{ asset('assets') }}/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
 
     @section('title')
-        Data Laporan Pengunjung Aktif
+        Data Pengunjung Aktif
     @endsection
 
     @section('content')
@@ -20,15 +20,16 @@
                         </div>
 
                         <div class="card-toolbar flex-row-fluid justify-content-end gap-5">
-                            <div class="w-100 mw-150px">
-                                <select class="form-select form-select-solid" data-hide-search="true" data-placeholder="Laporan"
-                                    id="filterData">
-                                    <option value="" selected disabled>Pilih salah satu</option>
-                                    <option value="weekly">Minggu ini</option>
-                                    <option value="monthly">Bulanan ini</option>
-                                    <option value="published">Semua</option>
+                            {{-- <div class="w-100 mw-150px">
+                                <select class="form-select form-select-solid" data-control="select2" data-hide-search="true"
+                                    data-placeholder="Status" data-kt-ecommerce-product-filter="status">
+                                    <option></option>
+                                    <option value="all">All</option>
+                                    <option value="published">Published</option>
+                                    <option value="scheduled">Scheduled</option>
+                                    <option value="inactive">Inactive</option>
                                 </select>
-                            </div>
+                            </div> --}}
 
                             <button type="button" class="btn btn-light-primary" data-kt-menu-trigger="click"
                                 data-kt-menu-placement="bottom-end">
@@ -37,7 +38,7 @@
                                 Export Data
                             </button>
 
-                            <a href="/address/create" class="btn btn-primary">Lihat Laporan</a>
+                            <a href="/visitors" class="btn btn-primary">Lihat Laporan</a>
                             {{-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">
                                 Add Data
                             </button> --}}
@@ -100,36 +101,6 @@
         <script src="{{ asset('assets') }}/plugins/custom/datatables/datatables.bundle.js"></script>
 
         <script>
-            function hapus(id) {
-                Swal.fire({
-                    title: 'Apakah Anda yakin?',
-                    text: "Data yang dihapus tidak dapat dikembalikan!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonText: 'Ya, hapus!',
-                    cancelButtonText: 'Batal',
-                    reverseButtons: true
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $.ajax({
-                            type: "DELETE",
-                            url: "/visitors/destroy/" + id,
-                            data: {
-                                _token: "{{ csrf_token() }}"
-                            },
-                            success: function(data) {
-                                $('#datatable').DataTable().ajax.reload();
-                                Swal.fire(
-                                    'Terhapus!',
-                                    'Data berhasil dihapus.',
-                                    'success'
-                                )
-                            }
-                        });
-                    }
-                })
-            }
-
             function detail(id) {
                 var baseUrl = "/";
                 fetch(`/visitors/detail/` + id)
@@ -227,17 +198,6 @@
                         });
                     });
 
-                    $('#filterData').on('change', function() {
-                        var value = $(this).val();
-                        if (value == 'weekly') {
-                            datatable.ajax.url("{{ route('visitors.data') }}?filter=weekly").load();
-                        } else if (value == 'monthly') {
-                            datatable.ajax.url("{{ route('visitors.data') }}?filter=monthly").load();
-                        } else {
-                            datatable.ajax.url("{{ route('visitors.data') }}").load();
-                        }
-                    });
-
                     $('#reload').on('click', function(e) {
                         e.preventDefault();
 
@@ -268,7 +228,7 @@
                         datatable = $(table).DataTable({
                             processing: true,
                             serverSide: true,
-                            ajax: "{{ route('visitors.data') }}",
+                            ajax: "{{ route('visitors.pengunjung_aktif') }}",
                             columns: [{
                                     data: 'DT_RowIndex',
                                     name: '#',

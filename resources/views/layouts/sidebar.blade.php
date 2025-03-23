@@ -54,9 +54,22 @@
                     <div class="menu-item py-2">
                         <span class="menu-link menu-center">
                             <span class="menu-icon me-0">
-                                <a class="btn btm-sm menu-icon me-0" href="/visitors" data-kt-menu-overflow="true"
-                                    data-bs-toggle="tooltip" data-bs-placement="right" title="Registrasi Tamu">
+                                <a class="btn btm-sm menu-icon me-0" href="/visitors/registrasi"
+                                    data-kt-menu-overflow="true" data-bs-toggle="tooltip" data-bs-placement="right"
+                                    title="Registrasi Tamu">
                                     <i class="ki-outline ki-faceid fs-2x"></i>
+                                </a>
+                            </span>
+                        </span>
+                    </div>
+
+                    <div class="menu-item py-2">
+                        <span class="menu-link menu-center">
+                            <span class="menu-icon me-0">
+                                <a class="btn btm-sm menu-icon me-0" href="/visitors/pengunjung_aktif"
+                                    data-kt-menu-overflow="true" data-bs-toggle="tooltip" data-bs-placement="right"
+                                    title="Pengunjung Aktif">
+                                    <i class="ki-outline ki-eye fs-2x"> </i>
                                 </a>
                             </span>
                         </span>
@@ -111,7 +124,7 @@
                             </div>
                             <div class="menu-item">
                                 <!--begin:Menu link-->
-                                <a class="menu-link" href="/kurir">
+                                <a class="menu-link" href="/companies">
                                     <span class="menu-bullet">
                                         <span class="bullet bullet-dot"></span>
                                     </span>

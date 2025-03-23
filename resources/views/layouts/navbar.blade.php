@@ -16,7 +16,9 @@
                 <a href="/" class="text-muted text-hover-primary">Home</a>
             </li>
             <!--end::Item-->
-
+            @php
+                $segments = request()->segments();
+            @endphp
             <!--begin::Item-->
             @if (request()->path() != '/')
                 <!--begin::Item-->
@@ -24,14 +26,12 @@
                     <span class="bullet bg-gray-400 w-5px h-2px"></span>
                 </li>
                 <!--end::Item-->
-                <li class="breadcrumb-item text-muted">{{ ucfirst(request()->path()) }}</li>
+                <li class="breadcrumb-item text-muted">{{ ucfirst($segments[0]) }}</li>
             @endif
             <!--end::Item-->
 
             <!--begin::Item-->
-            @php
-                $segments = request()->segments();
-            @endphp
+
             @if (count($segments) > 1)
                 <!--begin::Item-->
                 <li class="breadcrumb-item">

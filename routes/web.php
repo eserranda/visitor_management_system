@@ -1,9 +1,10 @@
 <?php
 
-use App\Http\Controllers\AddressController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\VisitorsController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\AddressController;
+use App\Http\Controllers\VisitorsController;
+use App\Http\Controllers\CompaniesController;
 
 Route::get('/', function () {
     return view('page.users.index');
@@ -46,16 +47,27 @@ Route::prefix('address')->controller(AddressController::class)->group(function (
 
 Route::prefix('visitors')->controller(VisitorsController::class)->group(function () {
     Route::get('/', 'index');
+    Route::get('/data', 'getAllWithDataTable')->name('visitors.data');
+    Route::get('/pengunjung_aktif', 'pengunjungAktif');
+    Route::get('/data_pengunjung_aktif', 'GetAllDataPengunjungAktif')->name('visitors.pengunjung_aktif');
+    Route::get('/registrasi', 'registrasi');
     Route::get('/create', 'create');
     Route::post('/store', 'store');
+    Route::put('/update/{id}', 'update');
+    Route::get('/detail/{id}', 'detail');
+    Route::delete('/destroy/{id}', 'destroy');
     // Route::get('/data', 'getAllDataTable')->name('address.data');
     // Route::get('/getAddressesGroupedByBlock', 'getAddressesGroupedByBlock');
+});
+
+Route::prefix('companies')->controller(CompaniesController::class)->group(function () {
+    Route::get('/', 'index');
+    Route::get('/create', 'create');
+    Route::post('/store', 'store');
+    Route::get('/data', 'getAllDataTable')->name('companies.data');
+    Route::delete('/destroy/{id}', 'destroy');
 });
 
 // Route::get('/address', function () {
 //     return view('page.address.index');
 // });
-
-Route::get('/visitors', function () {
-    return view('page.visitors.index');
-});

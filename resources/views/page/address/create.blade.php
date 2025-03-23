@@ -75,7 +75,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12 fv-row">
-                                        <label class="required fs-5 fw-semibold mb-2">Nama Jalan</label>
+                                        <label class="fs-5 fw-semibold mb-2">Nama Jalan</label>
                                         <textarea class="form-control" placeholder="Nama jalan" name="street_name" id="street_name" style="height: 100px"></textarea>
                                         <div class="invalid-feedback"> </div>
 

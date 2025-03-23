@@ -63,7 +63,9 @@ class AddressController extends Controller
                 return  'Blok ' . $address->block_number . ' No. ' . $address->house_number;
             })
             ->addColumn('action', function ($row) {
-                return '<a href="#" class="btn btn-sm btn-primary">Edit</a> <a href="#" class="btn btn-sm btn-danger">Delete</a>';
+                $btn = '<a href="#" class="btn btn-sm btn-icon btn-info me-2" onclick="edit(\'' . $row->id  . '\')><i class="bi bi-pencil"></i></a>';
+                $btn .= '<a href="#" class="btn btn-sm btn-icon btn-danger"><i class="bi bi-trash fs-4 "></i></a>';
+                return $btn;
             })
             ->rawColumns(['action'])
             ->make(true);
@@ -77,7 +79,6 @@ class AddressController extends Controller
             'user_id' => 'required|integer|exists:users,id',
             'block_number' => 'required|string',
             'house_number' => 'required|string',
-            'street_name' => 'required|string',
         ], [
             'required' => ':attribute harus diisi',
             'unique' => ':attribute sudah ada',
@@ -85,6 +86,23 @@ class AddressController extends Controller
             'string' => ':attribute harus berupa string',
             'integer' => ':attribute harus berupa angka',
         ]);
+
+
+        // Tambahkan validasi kustom
+        $validator->after(function ($validator) use ($request) {
+            $query = Address::where('block_number', $request->block_number)
+                ->where('house_number', $request->house_number)
+                ->where('user_id', $request->user_id);
+
+            // Jika dalam mode update, kecualikan record saat ini
+            if (isset($address) && $address->id) {
+                $query->where('id', '!=', $address->id);
+            }
+
+            if ($query->exists()) {
+                $validator->errors()->add('block_number', 'Kombinasi Blok, Nomor Rumah, dan Pengguna sudah terdaftar');
+            }
+        });
 
         if ($validator->fails()) {
             return response()->json([
