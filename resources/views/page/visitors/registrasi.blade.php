@@ -123,7 +123,13 @@
                                     </div>
                                 </div>
                                 <div class="row mb-5 fv-row">
-                                    <div class="col-md-12 fv-row">
+                                    <div class="col-md-6 fv-row">
+                                        <label class="fs-5 fw-semibold mb-2">Plat Nomor Kendaraan</label>
+                                        <input type="text" class="form-control" placeholder="Plat Nomor Kendaraan"
+                                            name="vehicle_number" id="vehicle_number" />
+                                        <div class="invalid-feedback"> </div>
+                                    </div>
+                                    <div class="col-md-6 fv-row">
                                         <label class="required fs-5 fw-semibold mb-2">Tujuan Kunjungan</label>
                                         <textarea class="form-control" placeholder="Tujuan Kunjungan" name="purpose" id="purpose" style="height: 70px"></textarea>
                                         <div class="invalid-feedback"> </div>

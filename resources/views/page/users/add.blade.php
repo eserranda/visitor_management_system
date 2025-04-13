@@ -66,6 +66,17 @@
                                     <div class="invalid-feedback"> </div>
                                 </div>
                                 <div class="col-md-4 fv-row">
+                                    <label class="required fs-5 fw-semibold mb-2">Role</label>
+                                    <select class="form-select form-select-solid" data-hide-search="true"
+                                        data-placeholder="Pilih Role" name="roles[]" id="roles">
+                                        <option value="" selected disabled>Pilih Role</option>
+                                        @foreach ($roles as $item)
+                                            <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    <div class="invalid-feedback"> </div>
+                                </div>
+                                <div class="col-md-4 fv-row">
                                     <label class="fs-5 fw-semibold mb-2">Keterangan</label>
                                     <input type="tetx" class="form-control form-control-solid" placeholder="Keterangan"
                                         name="keterangan" id="keterangan" />
@@ -150,30 +161,25 @@
                     }
                 });
 
-                // Swal.fire({
-                //     icon: 'success',
-                //     title: 'Success',
-                //     text: data.message,
-                // });
-                toastr.options = {
-                    "closeButton": true,
-                    "debug": false,
-                    "newestOnTop": false,
-                    "progressBar": true,
-                    "positionClass": "toastr-top-right",
-                    "preventDuplicates": false,
-                    "onclick": null,
-                    "showDuration": "100",
-                    "hideDuration": "500",
-                    "timeOut": "3000",
-                    "extendedTimeOut": "1000",
-                    "showEasing": "swing",
-                    "hideEasing": "linear",
-                    "showMethod": "fadeIn",
-                    "hideMethod": "fadeOut"
-                };
+                Swal.fire({
+                    title: 'Success!',
+                    text: "Data berhasil di tambahkan!",
+                    icon: 'success',
+                    showCancelButton: true,
+                    confirmButtonText: 'Tambah Lagi',
+                    confirmButtonColor: '#3085d6',
 
-                toastr.success("Data Berhasil di simpan", "Success");
+                    cancelButtonText: 'Lihat Data',
+                    cancelButtonColor: '#28a745',
+                    allowOutsideClick: false,
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.reset();
+                    } else if (result.dismiss === Swal.DismissReason.cancel) {
+                        window.location.href = '/users';
+                    }
+                })
             } catch (error) {
                 console.error(error);
             }

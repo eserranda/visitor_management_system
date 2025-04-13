@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
@@ -30,7 +31,7 @@ class UserController extends Controller
 
     public function getAllDataTable(Request $request)
     {
-        $users = User::all();
+        $users = User::latest('created_at')->get();
 
         return DataTables::of($users)
             ->addIndexColumn()
@@ -45,10 +46,10 @@ class UserController extends Controller
 
     public function add()
     {
-        // $roles = Role::all();
+        $roles = Role::all();
 
-        // return view('page.users.add', compact('roles'));
-        return view('page.users.add');
+        return view('page.users.add', compact('roles'));
+        // return view('page.users.add');
     }
 
     public function register(Request $request)
@@ -60,8 +61,8 @@ class UserController extends Controller
             'phone_number' => 'required|integer',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:4|confirmed',
-            // 'roles' => 'required|array',
-            // 'roles.*' => 'exists:roles,name',
+            'roles' => 'required|array',
+            'roles.*' => 'exists:roles,id',
         ], [
             'required' => ':attribute harus diisi',
             'unique' => ':attribute sudah ada',
@@ -73,7 +74,7 @@ class UserController extends Controller
             'email' => ':attribute harus berupa email',
             'max' => ':attribute maksimal :max karakter',
             'confirmed' => ':attribute tidak cocok',
-            // 'roles.*' => ':attribute tidak ada',
+            'roles.*' => ':attribute tidak ada',
         ]);
 
         if ($validator->fails()) {
@@ -83,27 +84,49 @@ class UserController extends Controller
             ], 422);
         }
 
-        $save = User::create([
-            'name' => $request->name,
-            'username' => $request->username,
-            'nickname' => $request->nickname,
-            'phone_number' => $request->phone_number,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'status' => 'in_house',
-        ]);
+        try {
+            DB::beginTransaction();
 
-        // $user->roles()->attach(Role::whereIn('name', $request->roles)->get());
-        if (!$save) {
+            $user = User::create([
+                'name' => $request->name,
+                'username' => $request->username,
+                'nickname' => $request->nickname,
+                'phone_number' => $request->phone_number,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'status' => 'in_house',
+            ]);
+
+            // dd($request->roles);
+
+            $user->roles()->attach(Role::whereIn('id', $request->roles)->get());
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+
             return response()->json([
                 'success' => false,
-                'message' => 'Registrasi Gagal'
+                'message' => 'Registrasi Gagal',
+                'error' => $e->getMessage()
             ], 500);
         }
 
         return response()->json([
             'success' => true,
-            'message' => 'Registrasi Berhasil'
+            'message' => 'Registrasi Berhasil',
+            'data' => $user
+        ], 200);
+    }
+
+    public function destroy($id)
+    {
+        $user = User::find($id);
+        $user->delete();
+
+        return response()->json([
+            'success' => true,
+            'messages' => 'Berhasil menghapus data user'
         ], 200);
     }
 }

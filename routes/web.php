@@ -5,6 +5,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\VisitorsController;
 use App\Http\Controllers\CompaniesController;
+use App\Http\Controllers\FutureVisitorController;
+use App\Http\Controllers\RoleController;
 
 Route::get('/', function () {
     return view('page.users.index');
@@ -39,6 +41,7 @@ Route::get('/dashboard', function () {
     return view('page.dashboard.index');
 });
 
+
 Route::prefix('address')->controller(AddressController::class)->group(function () {
     Route::get('/', 'index');
     Route::get('/create', 'create');
@@ -48,6 +51,18 @@ Route::prefix('address')->controller(AddressController::class)->group(function (
     Route::get('/getAddressesGroupedByBlock', 'getAddressesGroupedByBlock');
     Route::delete('/destroy/{id}', 'destroy');
     Route::post('/update/{id}', 'update');
+});
+
+Route::prefix('future-visitors')->controller(FutureVisitorController::class)->group(function () {
+    Route::get('/', 'index');
+});
+
+Route::prefix('roles')->controller(RoleController::class)->group(function () {
+    Route::get('/', 'index');
+    Route::get('/data', 'getAllDataTable')->name('roles.data');
+    Route::post('/store', 'store');
+    // Route::get('/findById/{id}', 'findById');
+    Route::delete('/destroy/{id}', 'destroy');
 });
 
 Route::prefix('visitors')->controller(VisitorsController::class)->group(function () {

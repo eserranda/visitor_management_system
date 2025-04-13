@@ -286,5 +286,31 @@
             KTUtil.onDOMContentLoaded(function() {
                 KTDatatablesExample.init();
             });
+
+            function hapus(id) {
+                Swal.fire({
+                    title: 'Apakah Anda yakin?',
+                    text: "Data yang dihapus tidak dapat dikembalikan!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya, hapus!',
+                    cancelButtonText: 'Batal',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: "DELETE",
+                            url: "/users/destroy/" + id,
+                            data: {
+                                _token: "{{ csrf_token() }}"
+                            },
+                            success: function(data) {
+                                $('#datatable').DataTable().ajax.reload();
+                                toastr.success('Data berhasil dihapus', 'Success');
+                            }
+                        });
+                    }
+                })
+            }
         </script>
     @endpush
