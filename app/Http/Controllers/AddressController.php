@@ -76,7 +76,11 @@ class AddressController extends Controller
         return datatables()->of($addresses)
             ->addIndexColumn()
             ->editColumn('user_id', function ($address) {
-                return $address->user->nickname;
+                if ($address->user_id == null) {
+                    return '-';
+                } else {
+                    return $address->user->name;
+                }
             })
             ->addColumn('block_and_number', function ($address) {
                 return  'Blok ' . $address->block_number . ' No. ' . $address->house_number;
