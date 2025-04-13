@@ -110,10 +110,11 @@ class VisitorsController extends Controller
                 return $row->user->nickname;
             })
             ->editColumn('visitor_type', function ($row) {
+                $companyName = $row->company ? $row->company->name : ' - ';
                 if ($row->visitor_type == 'kurir') {
-                    return 'Kurir' . ' (' . $row->company->name . ')';
+                    return 'Kurir' . ' (' . $companyName . ')';
                 } else if ($row->visitor_type == 'transportasi_online') {
-                    return 'Trans. Online' . ' (' . $row->company->name . ')';
+                    return 'Trans. Online' . ' (' . $companyName . ')';
                 } else {
                     return 'Tamu Pribadi';
                 }
@@ -187,6 +188,7 @@ class VisitorsController extends Controller
             'visitor_type' => $request->input('visitor_type'),
             'company_id' => $request->input('company_id'),
             'phone_number' => $request->input('phone_number'),
+            'vehicle_number' => $request->input('vehicle_number'),
             'purpose' => $request->input('purpose'),
             'check_in' => Carbon::now(),
             'status' => 'visiting',
@@ -214,8 +216,9 @@ class VisitorsController extends Controller
             'name' => $visitor->name,
             'purpose' => $visitor->purpose,
             'phone_number' => $visitor->phone_number,
+            'vehicle_number' => $visitor->vehicle_number,
             'visitor_type' => $visitor->visitor_type,
-            'company_id' => $visitor->company->name,
+            'company_id' => $visitor->company_id ? $visitor->company->name : '-',
             'check_in' => Carbon::parse($visitor->check_in)->format('d-m-Y H:i:s'),
             'check_out' => $visitor->check_out ? Carbon::parse($visitor->check_out)->format('d-m-Y H:i:s') : '-',
             'status' => $visitor->status,

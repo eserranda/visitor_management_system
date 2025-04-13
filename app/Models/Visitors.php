@@ -12,6 +12,7 @@ class Visitors extends Model
         'visitor_type',
         'company_id',
         'phone_number',
+        'vehicle_number',
         'purpose',
         'check_in',
         'check_out',

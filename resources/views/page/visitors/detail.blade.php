@@ -44,6 +44,12 @@
                                     </div>
                                 </div>
                                 <div class="row mb-7">
+                                    <label class="col-lg-4 fw-semibold text-muted px-7">Nomor Plat</label>
+                                    <div class="col-lg-8">
+                                        <span class="fw-bold fs-6 text-gray-800" id="detail_vehicle_number"></span>
+                                    </div>
+                                </div>
+                                <div class="row mb-7">
                                     <label class="col-lg-4 fw-semibold text-muted px-7">Jenis Pengunjung</label>
                                     <div class="col-lg-8">
                                         <span class="fw-bold fs-6 text-gray-800" id="detail_visitor_type"></span>

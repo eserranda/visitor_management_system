@@ -109,6 +109,7 @@
                         document.getElementById('detail_name').innerHTML = data.name;
                         document.getElementById('detail_tujuan').innerHTML = data.purpose;
                         document.getElementById('detail_phone_number').innerHTML = data.phone_number;
+                        document.getElementById('detail_vehicle_number').innerHTML = data.vehicle_number;
                         document.getElementById('detail_visitor_type').innerHTML = data.visitor_type + ' (' + data
                             .company_id + ')';
                         document.getElementById('detail_check_in').innerHTML = data.check_in;
