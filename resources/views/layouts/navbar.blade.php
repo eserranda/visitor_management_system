@@ -72,10 +72,13 @@
                         <!--end::Avatar-->
                         <!--begin::Username-->
                         <div class="d-flex flex-column">
-                            <div class="fw-bold d-flex align-items-center fs-5">Alice Page
-                                <span class="badge badge-light-success fw-bold fs-8 px-2 py-1 ms-2">Pro</span>
+                            <div class="fw-bold d-flex align-items-center fs-5">
+                                {{ auth()->check() ? auth()->user()->name : '' }}
+                                {{-- <span class="badge badge-light-success fw-bold fs-8 px-2 py-1 ms-2">Pro</span> --}}
                             </div>
-                            <a href="#" class="fw-semibold text-muted text-hover-primary fs-7">alice@kt.com</a>
+                            <a href="#" class="fw-semibold text-muted text-hover-primary fs-7">
+                                {{ auth()->check() ? auth()->user()->email : '' }}
+                            </a>
                         </div>
                         <!--end::Username-->
                     </div>
@@ -285,10 +288,14 @@
         <!--begin:Info-->
         <div class="d-flex flex-column">
             <a href="../../demo25/dist/pages/user-profile/overview.html"
-                class="app-navbar-user-name text-gray-900 text-hover-primary fs-5 fw-bold">Alice
-                Page</a>
-            <span class="app-navbar-user-info text-gray-600 fw-semibold fs-7">UI/UX Design
-                Lean</span>
+                class="app-navbar-user-name text-gray-900 text-hover-primary fs-5 fw-bold">
+                {{ auth()->check() ? auth()->user()->name : '' }}
+            </a>
+            @foreach (auth()->check() ? auth()->user()->roles : [] as $role)
+                <span class="app-navbar-user-info text-gray-600 fw-semibold fs-7">
+                    {{ $role->name }}
+                </span>
+            @endforeach
         </div>
         <!--end:Info-->
     </div>

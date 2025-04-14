@@ -20,7 +20,7 @@
                         </div>
 
                         <div class="card-toolbar flex-row-fluid justify-content-end gap-5">
-                            <div class="w-100 mw-150px">
+                            {{-- <div class="w-100 mw-150px">
                                 <select class="form-select form-select-solid" data-control="select2" data-hide-search="true"
                                     data-placeholder="Status" data-kt-ecommerce-product-filter="status">
                                     <option></option>
@@ -29,7 +29,7 @@
                                     <option value="scheduled">Scheduled</option>
                                     <option value="inactive">Inactive</option>
                                 </select>
-                            </div>
+                            </div> --}}
 
                             <button type="button" class="btn btn-light-primary" data-kt-menu-trigger="click"
                                 data-kt-menu-placement="bottom-end">
@@ -38,7 +38,11 @@
                                 Export Data
                             </button>
 
-                            <a href="/address/create" class="btn btn-primary">Add Data</a>
+                            {{-- <a href="/address/create" class="btn btn-primary">Add Data</a> --}}
+                            <button type="button" class="btn btn-primary" onclick="add()">
+                                Add Data
+                            </button>
+
                             <div id="export_menu"
                                 class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-150px py-4"
                                 data-kt-menu="true">
@@ -86,7 +90,7 @@
                 </div>
             </div>
         </div>
-        {{-- @include('page.address.create') --}}
+        @include('page.address.create')
         @include('page.address.edit')
     @endsection
 
@@ -100,7 +104,36 @@
                         dropdownParent: $('#editModal')
                     });
                 }
+
+                if ($.fn.select2) {
+                    $('#user_id').select2({
+                        dropdownParent: $('#addModal')
+                    });
+                }
             });
+
+            function add() {
+                // Kosongkan dropdown users
+                const userSelect = $('#user_id');
+                userSelect.empty();
+
+                // Tambahkan placeholder option
+                userSelect.append(new Option('', '', false, false));
+
+                // Ambil data users dari server
+                fetch(`/users/getAll`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Tambahkan users ke dropdown
+                        data.forEach(user => {
+                            const displayName = user.nickname || user.name;
+                            userSelect.append(new Option(displayName, user.id, false, false));
+                        });
+                    })
+                    .catch(error => console.error(error));
+
+                $('#addModal').modal('show');
+            }
 
             function edit(id) {
                 fetch(`/address/findById/` + id)

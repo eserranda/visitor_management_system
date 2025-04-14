@@ -91,6 +91,7 @@
                                     <th>Email</th>
                                     <th>No Hp</th>
                                     <th>Status</th>
+                                    <th>Roles</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -107,35 +108,40 @@
             <!--end::Content container-->
         </div>
         <!--end::Content-->
+        @include('page.users.edit')
     @endsection
 
     @push('scripts')
         <script src="{{ asset('assets') }}/plugins/custom/datatables/datatables.bundle.js"></script>
 
         <script>
-            // $(document).ready(function() {
-            //     // $('#search').on('click', function() {
-            //     //     var selectedKelas = $('#filterKelas').val();
-            //     //     var selectedTanggal = $('#filterTanggal').val();
-            //     //     if (!selectedKelas && !selectedTanggal) {
-            //     //         alert('Pilih kelas atau tanggal terlebih dahulu');
-            //     //         return;
-            //     //     }
-            //     //     const url = '/users/search?kelas=' + selectedKelas + '&tanggal=' +
-            //     //         selectedTanggal;
-            //     //     myDataTable.ajax.url(url).load();
-            //     // });
+            function edit(id) {
+                fetch(`/users/findById/` + id)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                        // Set the values in the modal form fields
+                        $('#edit_id').val(data.id);
+                        $('#edit_name').val(data.name);
+                        $('#edit_username').val(data.username);
+                        $('#edit_nickname').val(data.nickname);
+                        $('#edit_email').val(data.email);
+                        $('#edit_phone_number').val(data.phone_number);
 
-            //     // $('#reload').on('click', function() {
-            //     //     $('#filterTanggal').val('');
-            //     //     $('#filterKelas').val('');
-            //     //     myDataTable.ajax.url('/users/data').load();
-            //     // });
-            //     KTDatatablesExample.init();
+                        // Generate options for role dropdown
+                        let options = '<option value="" disabled>Pilih Role</option>';
+                        data.all_roles.forEach(role => {
+                            // Check if this role is the user's current role
+                            let selected = (role.id === data.roles.id) ? 'selected' : '';
+                            options += `<option value="${role.id}" ${selected}>${role.name}</option>`;
+                        });
+                        document.getElementById('edit_roles').innerHTML = options;
 
-
-            // });
-
+                        // Show the modal
+                        $('#editModal').modal('show');
+                    })
+                    .catch(error => console.error(error));
+            }
 
             var KTDatatablesExample = function() {
                 // Variabel untuk menyimpan referensi tabel
@@ -248,6 +254,11 @@
                                 {
                                     data: 'status',
                                     name: 'status'
+                                },
+                                {
+                                    data: 'roles',
+                                    name: 'roles',
+                                    orderable: true,
                                 },
                                 {
                                     data: 'action',

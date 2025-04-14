@@ -46,6 +46,11 @@ class RoleController extends Controller
             ], 422);
         }
 
+        // mengubah data name agar menjadi lowercase (huruf kecil semua)
+        $request->merge([
+            'name' => strtolower($request->name)
+        ]);
+
         $role = Role::create($request->all());
 
         return response()->json([

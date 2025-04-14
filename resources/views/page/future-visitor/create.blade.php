@@ -22,7 +22,7 @@
                             <div class="invalid-feedback"> </div>
                         </div>
                         <div class="col-md-6 fv-row">
-                            <label class="fs-5 fw-semibold mb-2">Tanggal</label>
+                            <label class="required fs-5 fw-semibold mb-2">Tanggal</label>
                             <input type="date" class="form-control" placeholder="Tanggal" name="arrival_date"
                                 id="arrival_date" />
                             <div class="invalid-feedback"> </div>
@@ -31,11 +31,22 @@
                     </div>
                     <div class="row mb-5">
                         <div class="col-md-6 fv-row">
-                            <label class="fs-5 fw-semibold mb-2">Jam (Estimasi waktu kedatangan)</label>
+                            <label class="required fs-5 fw-semibold mb-2">Jam (Estimasi waktu kedatangan)</label>
                             <input type="time" class="form-control" placeholder="estimated_arrival_time"
                                 name="estimated_arrival_time" id="purpose" />
                             <div class="invalid-feedback"> </div>
                         </div>
+                        <div class="col-md-6 fv-row">
+                            <label class="fs-5 fw-semibold mb-2">Jenis Kendaraan</label>
+                            <select class="form-select" name="vehicle_type" id="vehicle_type">
+                                <option selected disabled>- Pilih jenis kendaraan -</option>
+                                <option value="Mobil">Mobil</option>
+                                <option value="Motor">Motor</option>
+                                <div class="invalid-feedback"> </div>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mb-5">
                         <div class="col-md-6 fv-row">
                             <label class="fs-5 fw-semibold mb-2">Nomor Plat Kendaraan</label>
                             <input type="text" class="form-control" placeholder="Plat kendaraan"
@@ -65,7 +76,7 @@
             const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
 
             try {
-                const response = await fetch('/companies/store', {
+                const response = await fetch('/future-visitors/store', {
                     method: 'POST',
                     headers: {
                         'Accept': 'application/json',

@@ -16,22 +16,24 @@ Route::get('/users', function () {
     return view('page.users.index');
 });
 
+Route::get('login', [UserController::class, 'showLoginForm'])->name('login')->middleware('guest');
+Route::post('login', [UserController::class, 'login'])->middleware('guest');
+
+
+
 Route::prefix('users')->controller(UserController::class)->group(function () {
     Route::get('/', 'index');
     Route::get('/data', 'getAllDataTable')->name('users.data');
     Route::post('/register', 'register');
     Route::get('/add', 'add');
     Route::get('/findById/{id}', 'findById');
-    Route::post('/update', 'update');
+    Route::post('/update/{id}', 'update');
     Route::delete('/destroy/{id}', 'destroy');
-
     Route::get('/getAll', 'getAll');
+    Route::get('/findById/{id}', 'findById');
 
     // Route::get('/customers', 'userCustomers')->name('user-customers.index');
     // Route::post('/customer/register', 'customerRegister');
-    // Route::get('/findById/{id}', 'findById');
-    // Route::post('/update', 'update');
-    // Route::delete('/destroy/{id}', 'destroy');
 
     // Route::get('/profile', 'profile');
     // Route::get('/edit-profile', 'editProfile');
@@ -55,6 +57,12 @@ Route::prefix('address')->controller(AddressController::class)->group(function (
 
 Route::prefix('future-visitors')->controller(FutureVisitorController::class)->group(function () {
     Route::get('/', 'index');
+    Route::post('/store', 'store');
+    Route::get('/data', 'getAllDataTable')->name('future-visitors.data');
+    Route::get('/findById/{id}', 'findById');
+    Route::put('/update/{id}', 'update');
+    Route::get('/detail/{id}', 'detail');
+    Route::delete('/destroy/{id}', 'destroy');
 });
 
 Route::prefix('roles')->controller(RoleController::class)->group(function () {

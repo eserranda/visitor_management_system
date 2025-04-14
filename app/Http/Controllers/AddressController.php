@@ -72,7 +72,7 @@ class AddressController extends Controller
 
     public function getAllDataTable()
     {
-        $addresses = Address::all();
+        $addresses = Address::latest('created_at')->with('user')->get();
         return datatables()->of($addresses)
             ->addIndexColumn()
             ->editColumn('user_id', function ($address) {
@@ -82,6 +82,21 @@ class AddressController extends Controller
                     return $address->user->name;
                 }
             })
+            ->editColumn('street_name', function ($address) {
+                if ($address->street_name == null) {
+                    return '-';
+                } else {
+                    return $address->street_name;
+                }
+            })
+            ->editColumn('additional_info', function ($address) {
+                if ($address->additional_info == null) {
+                    return '-';
+                } else {
+                    return $address->additional_info;
+                }
+            })
+
             ->addColumn('block_and_number', function ($address) {
                 return  'Blok ' . $address->block_number . ' No. ' . $address->house_number;
             })
