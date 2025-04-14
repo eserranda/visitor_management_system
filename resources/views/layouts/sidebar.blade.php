@@ -176,7 +176,7 @@
                     <!--begin:Menu link-->
                     <span class="menu-link menu-center">
                         <span class="menu-icon me-0">
-                            <a class="btn btm-sm menu-icon me-0" href="/logout" data-kt-menu-overflow="true"
+                            <a class="btn btm-sm menu-icon me-0" href="/auth/logout" data-kt-menu-overflow="true"
                                 data-bs-toggle="tooltip" data-bs-placement="right" title="Logout">
                                 <i class="ki-outline ki-exit-left fs-1"></i>
                             </a>

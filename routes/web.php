@@ -8,20 +8,13 @@ use App\Http\Controllers\CompaniesController;
 use App\Http\Controllers\FutureVisitorController;
 use App\Http\Controllers\RoleController;
 
-Route::get('/', function () {
-    return view('page.users.index');
+Route::prefix('auth')->controller(UserController::class)->group(function () {
+    Route::get('/login', 'showLoginForm')->name('login');
+    Route::post('/login', 'login')->name('login.post');
+    Route::get('/logout', 'logout')->name('logout');
 });
 
-Route::get('/users', function () {
-    return view('page.users.index');
-});
-
-Route::get('login', [UserController::class, 'showLoginForm'])->name('login')->middleware('guest');
-Route::post('login', [UserController::class, 'login'])->middleware('guest');
-
-
-
-Route::prefix('users')->controller(UserController::class)->group(function () {
+Route::prefix('users')->controller(UserController::class)->middleware(['auth'])->group(function () {
     Route::get('/', 'index');
     Route::get('/data', 'getAllDataTable')->name('users.data');
     Route::post('/register', 'register');
@@ -44,7 +37,7 @@ Route::get('/dashboard', function () {
 });
 
 
-Route::prefix('address')->controller(AddressController::class)->group(function () {
+Route::prefix('address')->controller(AddressController::class)->middleware('auth')->group(function () {
     Route::get('/', 'index');
     Route::get('/create', 'create');
     Route::get('/findById/{id}', 'findById');
@@ -55,7 +48,7 @@ Route::prefix('address')->controller(AddressController::class)->group(function (
     Route::post('/update/{id}', 'update');
 });
 
-Route::prefix('future-visitors')->controller(FutureVisitorController::class)->group(function () {
+Route::prefix('future-visitors')->controller(FutureVisitorController::class)->middleware('auth')->group(function () {
     Route::get('/', 'index');
     Route::post('/store', 'store');
     Route::get('/data', 'getAllDataTable')->name('future-visitors.data');
@@ -66,7 +59,7 @@ Route::prefix('future-visitors')->controller(FutureVisitorController::class)->gr
     Route::post('/update-status/{id}', 'updateStatus');
 });
 
-Route::prefix('roles')->controller(RoleController::class)->group(function () {
+Route::prefix('roles')->controller(RoleController::class)->middleware('auth')->group(function () {
     Route::get('/', 'index');
     Route::get('/data', 'getAllDataTable')->name('roles.data');
     Route::post('/store', 'store');
@@ -74,7 +67,7 @@ Route::prefix('roles')->controller(RoleController::class)->group(function () {
     Route::delete('/destroy/{id}', 'destroy');
 });
 
-Route::prefix('visitors')->controller(VisitorsController::class)->group(function () {
+Route::prefix('visitors')->controller(VisitorsController::class)->middleware('auth')->group(function () {
     Route::get('/', 'index');
     Route::get('/data', 'getAllWithDataTable')->name('visitors.data');
     Route::get('/pengunjung_aktif', 'pengunjungAktif');
@@ -89,7 +82,7 @@ Route::prefix('visitors')->controller(VisitorsController::class)->group(function
     // Route::get('/getAddressesGroupedByBlock', 'getAddressesGroupedByBlock');
 });
 
-Route::prefix('companies')->controller(CompaniesController::class)->group(function () {
+Route::prefix('companies')->controller(CompaniesController::class)->middleware('auth')->group(function () {
     Route::get('/', 'index');
     Route::get('/create', 'create');
     Route::get('/findById/{id}', 'findById');

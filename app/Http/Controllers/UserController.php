@@ -19,6 +19,12 @@ class UserController extends Controller
         return view('page.auth.login');
     }
 
+    public function logout()
+    {
+        Auth::logout();
+        return redirect()->route('login');
+    }
+
     public function login(Request $request)
     {
         $loginType = filter_var($request->login, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
