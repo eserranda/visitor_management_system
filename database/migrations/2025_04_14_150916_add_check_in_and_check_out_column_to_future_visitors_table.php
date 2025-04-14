@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('future_visitors', function (Blueprint $table) {
-            $table->date('check_in')->nullable()->after('status');
-            $table->date('check_out')->nullable()->after('check_in');
+            $table->dateTime('check_in')->nullable()->after('status');
+            $table->dateTime('check_out')->nullable()->after('check_in');
             $table->string('img_url')->nullable()->after('check_out');
         });
     }
@@ -24,7 +24,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('future_visitors', function (Blueprint $table) {
-            //
+            $table->dropColumn('check_in');
+            $table->dropColumn('check_out');
+            $table->dropColumn('img_url');
         });
     }
 };

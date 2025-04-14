@@ -63,6 +63,7 @@ Route::prefix('future-visitors')->controller(FutureVisitorController::class)->gr
     Route::put('/update/{id}', 'update');
     Route::get('/detail/{id}', 'detail');
     Route::delete('/destroy/{id}', 'destroy');
+    Route::post('/update-status/{id}', 'updateStatus');
 });
 
 Route::prefix('roles')->controller(RoleController::class)->group(function () {

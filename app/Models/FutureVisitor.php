@@ -15,6 +15,8 @@ class FutureVisitor extends Model
         'vehicle_number',
         'vehicle_type',
         'status',
+        'check_in',
+        'check_out',
     ];
 
     public function user()

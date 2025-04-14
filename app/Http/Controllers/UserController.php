@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Role;
 use App\Models\User;
+use App\Models\Address;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Validator;
@@ -79,6 +80,14 @@ class UserController extends Controller
             })
             ->addColumn('status', function ($row) {
                 return $row->status == 'in_house' ? 'In House' : 'Out House';
+            })
+            ->addColumn('address', function ($row) {
+                $address = Address::where('user_id', $row->id)->first();
+                if ($address) {
+                    return 'Blok ' . $address->block_number . ' No. ' . $address->house_number;
+                } else {
+                    return '-';
+                }
             })
             ->addColumn('action', function ($row) {
                 $btn = '<a href="#" class="btn btn-sm btn-icon btn-info me-2" onclick="edit(' . $row->id . ')"><i class="bi bi-pencil fs-4"></i></a>';
@@ -155,6 +164,7 @@ class UserController extends Controller
             'data' => $user
         ], 200);
     }
+
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [

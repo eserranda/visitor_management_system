@@ -17,6 +17,33 @@ class FutureVisitorController extends Controller
         return view('page.future-visitor.index');
     }
 
+
+    public function updateStatus(Request $request, $id)
+    {
+        // format $id ke integer
+        $id = (int)$id;
+        // gunakan Carbon untuk mendapatkan waktu saat berdasarkan timezone
+        // $timeNow = Carbon::now('Asia/Makassar');
+        // dd($timeNow);
+        $futureVisitor = FutureVisitor::find($id);
+        if ($futureVisitor) {
+            $futureVisitor->status = $request->status;
+            $futureVisitor->check_in = Carbon::now('Asia/Makassar');
+            $futureVisitor->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Status berhasil diperbarui'
+            ], 200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Data tidak ditemukan'
+            ], 404);
+        }
+    }
+
+
     public function findById($id)
     {
         $futureVisitor = FutureVisitor::find($id);
@@ -24,11 +51,11 @@ class FutureVisitorController extends Controller
             return response()->json([
                 'success' => true,
                 'data' => $futureVisitor
-            ]);
+            ], 200);
         } else {
             return response()->json([
                 'success' => false,
-                'messages' => 'Data tidak ditemukan'
+                'message' => 'Data tidak ditemukan'
             ], 404);
         }
     }
@@ -36,16 +63,20 @@ class FutureVisitorController extends Controller
     public function detail($id)
     {
         $futureVisitor = FutureVisitor::find($id);
+
+        $checkIn = Carbon::parse($futureVisitor->check_in)->format('d-m-Y H:i T');
         return response()->json([
             'id' => $futureVisitor->id,
             'visitor_name' => $futureVisitor->visitor_name,
             'user_id' => $futureVisitor->user ? $futureVisitor->user->nickname : '-',
             'address' => $futureVisitor->address ? 'Blok ' . $futureVisitor->address->block_number . ' No. ' . $futureVisitor->address->house_number : '-',
             'arrival_date' => Carbon::parse($futureVisitor->arrival_date)->format('d-m-Y'),
-            'estimated_arrival_time' => Carbon::parse($futureVisitor->estimated_arrival_time)->format('H:i'),
+            'estimated_arrival_time' => Carbon::parse($futureVisitor->estimated_arrival_time)->setTimezone('Asia/Makassar')->format('H:i T'),
             'vehicle_number' => $futureVisitor->vehicle_number,
             'vehicle_type' => $futureVisitor->vehicle_type,
-            'status' => $futureVisitor->status,
+            'status' => $futureVisitor->status ? $futureVisitor->status : '-',
+            'check_in' => $futureVisitor->check_in ? Carbon::parse($futureVisitor->check_in)->setTimezone('Asia/Makassar')->format('d-m-Y H:i T') : '-',
+            'check_out' => $futureVisitor->check_out ? Carbon::parse($futureVisitor->check_out)->format('d-m-Y H:i') : '-',
             'created_at' => Carbon::parse($futureVisitor->created_at)->format('d-m-Y H:i'),
             'updated_at' => Carbon::parse($futureVisitor->updated_at)->format('d-m-Y H:i'),
         ]);
@@ -86,7 +117,8 @@ class FutureVisitorController extends Controller
             })
             ->addColumn('action', function ($row) {
                 if (auth()->user()->hasRole('penghuni')) {
-                    $btn = '<a href="#" class="btn btn-sm btn-icon btn-info me-2" onclick="edit(' . $row->id . ')"><i class="bi bi-pencil"></i></a>';
+                    $btn = '<a href="#" class="btn btn-sm btn-icon btn-info" onclick="detail(' . $row->id . ')"><i class="bi bi-eye-fill fs-4"></i></a>';
+                    $btn .= '<a href="#" class="btn btn-sm btn-icon btn-success mx-2" onclick="edit(' . $row->id . ')"><i class="bi bi-pencil"></i></a>';
                     $btn .= '<a href="#" class="btn btn-sm btn-icon btn-danger" onclick="hapus(' . $row->id . ')"><i class="bi bi-trash"></i></a>';
                 } else if (auth()->user()->hasRole('security')) {
                     $btn = '<a href="#" class="btn btn-sm btn-icon btn-info" onclick="detail(' . $row->id . ')"><i class="bi bi-eye-fill fs-4"></i></a>';
@@ -118,7 +150,7 @@ class FutureVisitorController extends Controller
         }
 
         // cek apakah user memiliki role penghuni
-        if (Auth::user()->hasRole('penghuni')) {
+        if (Auth::user()->hasRole(['penghuni', 'admin', 'super_admin'])) {
             $user_id = Auth::user()->id;
             $address_id = Address::where('user_id', $user_id)->first()->id;
             $futureVisitor = FutureVisitor::create([

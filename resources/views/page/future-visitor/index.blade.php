@@ -108,17 +108,22 @@
         <script src="{{ asset('assets') }}/plugins/custom/datatables/datatables.bundle.js"></script>
 
         <script>
-            function detail(id) {
-                fetch(`/future-visitors/detail/` + id)
+            async function detail(id) {
+                await fetch(`/future-visitors/detail/` + id)
                     .then(response => response.json())
                     .then(data => {
+                        document.getElementById('updateButton').setAttribute('data-id', data.id);
                         document.getElementById('detail_visitor_name').innerHTML = data.visitor_name;
                         document.getElementById('detail_user_id').innerHTML = data.user_id;
                         document.getElementById('detail_address').innerHTML = data.address;
                         document.getElementById('detail_arrival_date').innerHTML = data.arrival_date;
-                        document.getElementById('detail_estimated_arrival_time').innerHTML = data.estimated_arrival_time;
+                        document.getElementById('detail_estimated_arrival_time').innerHTML = data
+                            .estimated_arrival_time;
                         document.getElementById('detail_vehicle_type').innerHTML = data.vehicle_type;
                         document.getElementById('detail_vehicle_number').innerHTML = data.vehicle_number;
+                        document.getElementById('detail_status').innerHTML = data.status;
+                        document.getElementById('detail_check_in').innerHTML = data.check_in;
+                        document.getElementById('detail_check_out').innerHTML = data.check_out;
                     })
                     .catch(error => console.error(error));
                 $('#detailModal').modal('show');

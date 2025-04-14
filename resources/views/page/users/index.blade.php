@@ -92,6 +92,7 @@
                                     <th>No Hp</th>
                                     <th>Status</th>
                                     <th>Roles</th>
+                                    <th>Address</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -258,6 +259,11 @@
                                 {
                                     data: 'roles',
                                     name: 'roles',
+                                    orderable: true,
+                                },
+                                {
+                                    data: 'address',
+                                    name: 'address',
                                     orderable: true,
                                 },
                                 {
