@@ -5,10 +5,14 @@
 @endsection
 
 @section('content')
-    <div class="card">
-        <div class="card-header">
-            <h3 class="card-title">Dashboard</h3>
-            <button class="btn btn-check">Testing</button>
+    <div id="kt_app_content" class="app-content flex-column-fluid">
+        <div id="kt_app_content_container" class="app-container container-fluid">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Dashboard</h3>
+
+                </div>
+            </div>
         </div>
     </div>
 @endsection

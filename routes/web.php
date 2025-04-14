@@ -8,6 +8,10 @@ use App\Http\Controllers\CompaniesController;
 use App\Http\Controllers\FutureVisitorController;
 use App\Http\Controllers\RoleController;
 
+route::get('/', function () {
+    return view('page.dashboard.index');
+});
+
 Route::prefix('auth')->controller(UserController::class)->group(function () {
     Route::get('/login', 'showLoginForm')->name('login');
     Route::post('/login', 'login')->name('login.post');
