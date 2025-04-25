@@ -21,6 +21,7 @@ class VisitorsController extends Controller
         $companies = Companies::all();
         return view('page.visitors.index', compact('companies', 'transportasi_onlie'));
     }
+
     public function pengunjungAktif()
     {
         $transportasi_onlie = Companies::where('type', 'transportasi_online')->get();

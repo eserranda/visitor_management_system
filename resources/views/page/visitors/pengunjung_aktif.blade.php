@@ -249,16 +249,6 @@
                                     name: 'visitor_type',
                                     orderable: true,
                                 },
-                                // {
-                                //     data: 'phone_number',
-                                //     name: 'phone_number',
-                                //     orderable: true,
-                                // },
-                                // {
-                                //     data: 'purpose',
-                                //     name: 'purpose',
-                                //     orderable: true,
-                                // },
                                 {
                                     data: 'check_in',
                                     name: 'check_in',

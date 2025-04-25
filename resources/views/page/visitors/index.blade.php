@@ -3,7 +3,7 @@
     <link href="{{ asset('assets') }}/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
 
     @section('title')
-        Data Laporan Pengunjung Aktif
+        Data Laporan Pengunjung
     @endsection
 
     @section('content')
@@ -37,7 +37,7 @@
                                 Export Data
                             </button>
 
-                            <a href="/address/create" class="btn btn-primary">Lihat Laporan</a>
+                            {{-- <a href="/address/create" class="btn btn-primary">Lihat Laporan</a> --}}
                             {{-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addModal">
                                 Add Data
                             </button> --}}
