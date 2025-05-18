@@ -44,6 +44,15 @@ class UserController extends Controller
         return view('page.users.index', compact('users'));
     }
 
+    public function getAllPenghuni()
+    {
+        // ambil data user yang memiliki role 'penghuni'
+        $users = User::whereHas('roles', function ($query) {
+            $query->where('name', 'penghuni');
+        })->get();
+
+        return response()->json($users);
+    }
     public function getAll()
     {
         $users = User::all();
@@ -76,7 +85,29 @@ class UserController extends Controller
 
     public function getAllDataTable(Request $request)
     {
-        $users = User::latest('created_at')->get();
+        $filter = $request->query('filter');
+
+        if ($filter) {
+            if ($filter == 'penghuni') {
+                $users = User::whereHas('roles', function ($query) {
+                    $query->where('name', 'penghuni');
+                })->get();
+            } else if ($filter == 'security') {
+                $users = User::whereHas('roles', function ($query) {
+                    $query->where('name', 'security');
+                })->get();
+            } else if ($filter == 'admin') {
+                $users = User::whereHas('roles', function ($query) {
+                    $query->where('name', 'admin');
+                })->get();
+            } else if ($filter == 'super_admin') {
+                $users = User::whereHas('roles', function ($query) {
+                    $query->where('name', 'super_admin');
+                })->get();
+            }
+        } else {
+            $users = User::latest('created_at')->get();
+        }
 
         return DataTables::of($users)
             ->addIndexColumn()

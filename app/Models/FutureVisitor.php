@@ -17,6 +17,7 @@ class FutureVisitor extends Model
         'status',
         'check_in',
         'check_out',
+        'img_url',
     ];
 
     public function user()

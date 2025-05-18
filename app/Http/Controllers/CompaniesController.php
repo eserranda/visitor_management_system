@@ -37,7 +37,7 @@ class CompaniesController extends Controller
         return DataTables::of($companies)
             ->addIndexColumn()
             ->editColumn('type', function ($row) {
-                return $row->type == 'transportasi_online' ? 'Transportasi Online' : '-';
+                return $row->type == 'transportasi_online' ? 'Transportasi Online/Kurir' : 'Kurir';
             })
             ->editColumn('phone_number', function ($row) {
                 return $row->phone_number ?? '-';

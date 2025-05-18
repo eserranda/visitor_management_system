@@ -19,20 +19,20 @@
                             <div class="row g-9 mb-4">
                                 <div class="col-md-4 fv-row">
                                     <label class="required fs-5 fw-semibold mb-2">Nama Lengkap</label>
-                                    <input type="text" class="form-control form-control-solid" placeholder="Nama Lengkap"
-                                        name="name" id="name" />
+                                    <input type="text" class="form-control" placeholder="Nama Lengkap" name="name"
+                                        id="name" />
                                     <div class="invalid-feedback"> </div>
                                 </div>
                                 <div class="col-md-4 fv-row">
                                     <label class="required fs-5 fw-semibold mb-2">Username</label>
-                                    <input type="text" class="form-control form-control-solid" placeholder="Username"
-                                        name="username" id="username" />
+                                    <input type="text" class="form-control" placeholder="Username" name="username"
+                                        id="username" />
                                     <div class="invalid-feedback"> </div>
                                 </div>
                                 <div class="col-md-4 fv-row">
                                     <label class="required fs-5 fw-semibold mb-2">Nama Panggilan</label>
-                                    <input type="text" class="form-control form-control-solid"
-                                        placeholder="Contoh : Bapak Juni" name="nickname" id="nickname" />
+                                    <input type="text" class="form-control" placeholder="Contoh : Bapak Juni"
+                                        name="nickname" id="nickname" />
                                     <div class="invalid-feedback"> </div>
                                 </div>
                             </div>
@@ -40,19 +40,19 @@
                             <div class="row g-9 mb-4">
                                 <div class="col-md-4 fv-row">
                                     <label class="required fs-5 fw-semibold mb-2">Email</label>
-                                    <input type="mail" class="form-control form-control-solid" placeholder="Email"
-                                        name="email" id="email" value="example@gmail.com" />
+                                    <input type="mail" class="form-control" placeholder="Email" name="email"
+                                        id="email" value="example@gmail.com" />
                                     <div class="invalid-feedback"> </div>
                                 </div>
                                 <div class="col-md-4 fv-row">
                                     <label class="required fs-5 fw-semibold mb-2">Password</label>
-                                    <input type="password" class="form-control form-control-solid" placeholder="********"
-                                        name="password" id="password" />
+                                    <input type="password" class="form-control" placeholder="********" name="password"
+                                        id="password" />
                                     <div class="invalid-feedback"> </div>
                                 </div>
                                 <div class="col-md-4 fv-row">
                                     <label class="required fs-5 fw-semibold mb-2">Ulangi Password</label>
-                                    <input type="password" class="form-control form-control-solid" placeholder="********"
+                                    <input type="password" class="form-control" placeholder="********"
                                         name="password_confirmation" id="password_confirmation" />
                                     <div class="invalid-feedback"> </div>
                                 </div>
@@ -61,7 +61,7 @@
                             <div class="row g-9 mb-4">
                                 <div class="col-md-4 fv-row">
                                     <label class="required fs-5 fw-semibold mb-2">Nomor HP.</label>
-                                    <input type="number" class="form-control form-control-solid" placeholder="Phone Number"
+                                    <input type="number" class="form-control" placeholder="Phone Number"
                                         name="phone_number" id="phone_number" />
                                     <div class="invalid-feedback"> </div>
                                 </div>
@@ -78,8 +78,8 @@
                                 </div>
                                 <div class="col-md-4 fv-row">
                                     <label class="fs-5 fw-semibold mb-2">Keterangan</label>
-                                    <input type="tetx" class="form-control form-control-solid" placeholder="Keterangan"
-                                        name="keterangan" id="keterangan" />
+                                    <input type="tetx" class="form-control" placeholder="Keterangan" name="keterangan"
+                                        id="keterangan" />
                                     <div class="invalid-feedback"> </div>
                                 </div>
                             </div>

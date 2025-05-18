@@ -26,13 +26,13 @@
                         <div class="card-toolbar flex-row-fluid justify-content-end gap-5">
                             <div class="w-100 mw-150px">
                                 <!--begin::Select2-->
-                                <select class="form-select form-select-solid" data-control="select2" data-hide-search="true"
-                                    data-placeholder="Status" data-kt-ecommerce-product-filter="status">
-                                    <option></option>
+                                <select class="form-select form-select-solid" data-hide-search="true" id="filterData">
+                                    <option value="" selected disabled>Pilih Role</option>
                                     <option value="all">All</option>
-                                    <option value="published">Published</option>
-                                    <option value="scheduled">Scheduled</option>
-                                    <option value="inactive">Inactive</option>
+                                    <option value="penghuni">Penghuni</option>
+                                    <option value="security">Security</option>
+                                    <option value="admin">Admin</option>
+                                    <option value="super_admin">Super Admin</option>
                                 </select>
                                 <!--end::Select2-->
                             </div>
@@ -186,8 +186,27 @@
                         });
                     });
 
+                    $('#filterData').on('change', function() {
+                        var value = $(this).val();
+                        if (value == 'penghuni') {
+                            datatable.ajax.url("{{ route('users.data') }}?filter=penghuni").load();
+                        } else if (value == 'security') {
+                            datatable.ajax.url("{{ route('users.data') }}?filter=security").load();
+                        } else if (value == 'admin') {
+                            datatable.ajax.url("{{ route('users.data') }}?filter=admin").load();
+                        } else if (value == 'super_admin') {
+                            datatable.ajax.url("{{ route('users.data') }}?filter=super_admin").load();
+                        } else {
+                            datatable.ajax.url("{{ route('users.data') }}").load();
+                        }
+                    });
+
                     $('#reload').on('click', function(e) {
                         e.preventDefault();
+
+                        // Hapus filter yang ada di dropdown
+                        var filterSelect = document.querySelector('#filterData');
+                        filterSelect.value = '';
 
                         // Hapus teks yang ada di input search
                         var searchInput = document.querySelector('[data-kt-filter="search"]');
@@ -197,10 +216,10 @@
                         datatable.search('').columns().search('').draw();
 
                         // Load ulang data dari server
-                        datatable.ajax.reload();
+                        // datatable.ajax.reload();
+                        datatable.ajax.url("{{ route('users.data') }}").load();
 
                         // Jika menggunakan event keyup untuk pencarian, trigger event
-                        // $(searchInput).trigger('keyup');
                     });
                 }
 

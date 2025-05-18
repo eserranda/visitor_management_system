@@ -28,6 +28,7 @@ Route::prefix('users')->controller(UserController::class)->middleware(['auth'])-
     Route::delete('/destroy/{id}', 'destroy');
     Route::get('/getAll', 'getAll');
     Route::get('/findById/{id}', 'findById');
+    Route::get('/getAllPenghuni', 'getAllPenghuni');
 
     // Route::get('/customers', 'userCustomers')->name('user-customers.index');
     // Route::post('/customer/register', 'customerRegister');

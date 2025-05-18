@@ -53,6 +53,11 @@
                                 name="vehicle_number" id="vehicle_number" />
                             <div class="invalid-feedback"> </div>
                         </div>
+                        <div class="col-md-6 fv-row">
+                            <label class="fs-5 fw-semibold mb-2">Foto Tamu</label>
+                            <input type="file" class="form-control" name="captured_image" id="captured_image" />
+                            <div class="invalid-feedback"> </div>
+                        </div>
                     </div>
                 </div>
 

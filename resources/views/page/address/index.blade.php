@@ -121,7 +121,7 @@
                 userSelect.append(new Option('', '', false, false));
 
                 // Ambil data users dari server
-                fetch(`/users/getAll`)
+                fetch(`/users/getAllPenghuni`)
                     .then(response => response.json())
                     .then(data => {
                         // Tambahkan users ke dropdown

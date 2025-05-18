@@ -80,7 +80,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <a href="/address" class="btn btn-warning mx-2">Kembali</a>
+                    <button type="button" class="btn btn-warning mx-2" data-bs-dismiss="modal"
+                        aria-label="Close">Close</button>
 
                     <button type="submit" class="btn btn-primary">Simpan</button>
                 </div>

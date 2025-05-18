@@ -368,7 +368,7 @@
         });
 
         document.addEventListener('DOMContentLoaded', function() {
-            grade();
+            allAddress();
         });
 
         document.getElementById('visitor_type').addEventListener('change', function() {
@@ -389,7 +389,7 @@
             }
         });
 
-        function grade() {
+        function allAddress() {
             fetch('/address/getAddressesGroupedByBlock')
                 .then(response => response.json())
                 .then(data => {

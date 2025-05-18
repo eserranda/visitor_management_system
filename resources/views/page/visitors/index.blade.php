@@ -21,12 +21,11 @@
 
                         <div class="card-toolbar flex-row-fluid justify-content-end gap-5">
                             <div class="w-100 mw-150px">
-                                <select class="form-select form-select-solid" data-hide-search="true" data-placeholder="Laporan"
-                                    id="filterData">
+                                <select class="form-select form-select-solid" data-hide-search="true" id="filterData">
                                     <option value="" selected disabled>Pilih salah satu</option>
+                                    <option value="published">Semua</option>
                                     <option value="weekly">Minggu ini</option>
                                     <option value="monthly">Bulanan ini</option>
-                                    <option value="published">Semua</option>
                                 </select>
                             </div>
 
@@ -154,7 +153,6 @@
                         }
                     })
                     .catch(error => console.error(error));
-                // show modal edit
                 $('#detailModal').modal('show');
             }
 
@@ -242,6 +240,10 @@
 
                     $('#reload').on('click', function(e) {
                         e.preventDefault();
+
+                        // Hapus filter yang ada di dropdown
+                        var filterSelect = document.querySelector('#filterData');
+                        filterSelect.value = '';
 
                         var searchInput = document.querySelector('[data-kt-filter="search"]');
                         searchInput.value = '';

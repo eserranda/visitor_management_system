@@ -79,12 +79,34 @@ class FutureVisitorController extends Controller
             'check_out' => $futureVisitor->check_out ? Carbon::parse($futureVisitor->check_out)->format('d-m-Y H:i') : '-',
             'created_at' => Carbon::parse($futureVisitor->created_at)->format('d-m-Y H:i'),
             'updated_at' => Carbon::parse($futureVisitor->updated_at)->format('d-m-Y H:i'),
+            'img_url' => $futureVisitor->img_url,
         ]);
     }
 
-    public function getAllDataTable()
+    public function getAllDataTable(Request $request)
     {
-        $futureVisitors = FutureVisitor::latest('created_at')->get();
+        $filter = $request->query('filter');
+
+        // jika user yang login adalah security, admin, atau super_admin maka tampilkan semua data
+        $user = Auth::user();
+        if ($user->hasRole(['security', 'admin', 'super_admin'])) {
+            $futureVisitors = FutureVisitor::latest('created_at')->get();
+        } else {
+            $user_id = Auth::user()->id;
+            if ($filter) {
+                if ($filter == 'pending') {
+                    $futureVisitors =  FutureVisitor::where('user_id', $user_id)->where('status', 'pending')->latest('created_at')->get();
+                } else if ($filter == 'approved') {
+                    $futureVisitors =  FutureVisitor::where('user_id', $user_id)->where('status', 'approved')->latest('created_at')->get();
+                } else if ($filter == 'rejected') {
+                    $futureVisitors =  FutureVisitor::where('user_id', $user_id)->where('status', 'rejected')->latest('created_at')->get();
+                } else if ($filter == 'canceled') {
+                    $futureVisitors =  FutureVisitor::where('user_id', $user_id)->where('status', 'canceled')->latest('created_at')->get();
+                }
+            } else {
+                $futureVisitors = FutureVisitor::where('user_id', $user_id)->latest('created_at')->get();
+            }
+        }
 
         return datatables()
             ->of($futureVisitors)
@@ -140,13 +162,40 @@ class FutureVisitorController extends Controller
             'arrival_date' => 'required|date',
             'estimated_arrival_time' => 'required|date_format:H:i',
             'vehicle_number' => 'nullable|string|max:255',
+            'captured_image' => 'required|file|mimes:jpeg,png,jpg|max:5048',
+        ], [
+            'visitor_name.required' => 'Nama pengunjung harus diisi',
+            'arrival_date.required' => 'Tanggal kedatangan harus diisi',
+            'arrival_date.date' => 'Format tanggal kedatangan tidak valid',
+            'estimated_arrival_time.required' => 'Perkiraan waktu kedatangan harus diisi',
+            'estimated_arrival_time.date_format' => 'Format perkiraan waktu kedatangan tidak valid',
+            'vehicle_number.string' => 'Nomor kendaraan tidak valid',
+            'vehicle_number.max' => 'Nomor kendaraan maksimal 255 karakter',
+            'captured_image.required' => 'Gambar harus diunggah',
+            'captured_image.file' => 'File tidak valid',
+            'captured_image.mimes' => 'Hanya file JPEG, PNG, JPG yang diperbolehkan',
+            'captured_image.max' => 'Ukuran file maksimal 5MB'
         ]);
 
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'messages' => $validator->errors()->all()
+                'messages' => $validator->errors()
             ], 422);
+        }
+
+        $photoPath = null;
+        if ($request->file('captured_image')) {
+            $image = $request->file('captured_image');
+
+            $directory = 'images/future_visitor/';
+            $imageName = 'future_visitor_' . time() . '.' . $image->getClientOriginalExtension();
+
+            // pindahkan file ke direktori yang diinginkan
+            $image->move(public_path($directory), $imageName);
+
+            // 'images/future_visitor/namafile.jpg'
+            $photoPath = $directory . $imageName;
         }
 
         // cek apakah user memiliki role penghuni
@@ -161,6 +210,7 @@ class FutureVisitorController extends Controller
                 'estimated_arrival_time' => $request->estimated_arrival_time,
                 'vehicle_number' => $request->vehicle_number,
                 'vehicle_type' => $request->vehicle_type,
+                'img_url' => $photoPath,
             ]);
 
             if ($futureVisitor) {
@@ -209,8 +259,14 @@ class FutureVisitorController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(FutureVisitor $futureVisitor)
+    public function destroy(FutureVisitor $futureVisitor, $id)
     {
-        //
+        $futureVisitor = $futureVisitor::find($id);
+        $futureVisitor->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Data berhasil dihapus'
+        ]);
     }
 }

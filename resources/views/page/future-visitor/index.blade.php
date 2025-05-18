@@ -3,7 +3,7 @@
     <link href="{{ asset('assets') }}/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
 
     @section('title')
-        Data Tamu Yang Akan Berkunjung
+        Data Tamu Anda Yang Akan Berkunjung
     @endsection
 
     @section('content')
@@ -21,12 +21,12 @@
 
                         <div class="card-toolbar flex-row-fluid justify-content-end gap-5">
                             <div class="w-100 mw-150px">
-                                <select class="form-select form-select-solid" data-hide-search="true" data-placeholder="Laporan"
-                                    id="filterData">
+                                <select class="form-select form-select-solid" data-hide-search="true" id="filterData">
                                     <option value="" selected disabled>Filter</option>
-                                    <option value="weekly">Akan Berkunjung</option>
-                                    <option value="monthly">Selesai</option>
-                                    <option value="weekly">Semua</option>
+                                    <option value="pending">Akan Berkunjung</option>
+                                    <option value="cancelled">Batal Berkunjung</option>
+                                    <option value="approved">Selesai</option>
+                                    <option value="all">Semua</option>
                                 </select>
                             </div>
 
@@ -108,22 +108,57 @@
         <script src="{{ asset('assets') }}/plugins/custom/datatables/datatables.bundle.js"></script>
 
         <script>
+            function hapus(id) {
+                Swal.fire({
+                    title: 'Apakah Anda yakin?',
+                    text: "Data yang dihapus tidak dapat dikembalikan!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya, hapus!',
+                    cancelButtonText: 'Batal',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: "DELETE",
+                            url: "/future-visitors/destroy/" + id,
+                            data: {
+                                _token: "{{ csrf_token() }}"
+                            },
+                            success: function(data) {
+                                $('#datatable').DataTable().ajax.reload();
+                                Swal.fire(
+                                    'Terhapus!',
+                                    'Data berhasil dihapus.',
+                                    'success'
+                                )
+                            }
+                        });
+                    }
+                })
+            }
+
             async function detail(id) {
+                var baseUrl = "/";
                 await fetch(`/future-visitors/detail/` + id)
                     .then(response => response.json())
                     .then(data => {
-                        document.getElementById('updateButton').setAttribute('data-id', data.id);
                         document.getElementById('detail_visitor_name').innerHTML = data.visitor_name;
-                        document.getElementById('detail_user_id').innerHTML = data.user_id;
-                        document.getElementById('detail_address').innerHTML = data.address;
                         document.getElementById('detail_arrival_date').innerHTML = data.arrival_date;
-                        document.getElementById('detail_estimated_arrival_time').innerHTML = data
-                            .estimated_arrival_time;
                         document.getElementById('detail_vehicle_type').innerHTML = data.vehicle_type;
                         document.getElementById('detail_vehicle_number').innerHTML = data.vehicle_number;
+                        document.getElementById('detail_estimated_arrival_time').innerHTML = data
+                            .estimated_arrival_time;
                         document.getElementById('detail_status').innerHTML = data.status;
                         document.getElementById('detail_check_in').innerHTML = data.check_in;
                         document.getElementById('detail_check_out').innerHTML = data.check_out;
+
+                        let photoPreview = document.getElementById('image_show');
+                        if (data.img_url) {
+                            photoPreview.src = baseUrl + data.img_url;
+                        } else {
+                            photoPreview.src = '';
+                        }
                     })
                     .catch(error => console.error(error));
                 $('#detailModal').modal('show');
@@ -136,7 +171,7 @@
 
                 // Hook export buttons
                 var exportButtons = () => {
-                    const documentTitle = 'Customer Orders Report';
+                    const documentTitle = 'Data Tamu Yang Akan Berkunjung';
 
                     var buttons = new $.fn.dataTable.Buttons(datatable, {
                         buttons: [{
@@ -171,6 +206,21 @@
                         });
                     });
 
+                    $('#filterData').on('change', function() {
+                        var value = $(this).val();
+                        if (value == 'pending') {
+                            datatable.ajax.url("{{ route('future-visitors.data') }}?filter=pending").load();
+                        } else if (value == 'cancelled') {
+                            datatable.ajax.url("{{ route('future-visitors.data') }}?filter=cancelled").load();
+                        } else if (value == 'approved') {
+                            datatable.ajax.url("{{ route('future-visitors.data') }}?filter=approved").load();
+                        } else if (value == 'rejected') {
+                            datatable.ajax.url("{{ route('future-visitors.data') }}?filter=rejected").load();
+                        } else {
+                            datatable.ajax.url("{{ route('future-visitors.data') }}").load();
+                        }
+                    });
+
                     $('#reload').on('click', function(e) {
                         e.preventDefault();
 
@@ -182,7 +232,9 @@
                         datatable.search('').columns().search('').draw();
 
                         // Load ulang data dari server
-                        datatable.ajax.reload();
+                        // datatable.ajax.reload();
+                        datatable.ajax.url("{{ route('future-visitors.data') }}").load();
+
 
                         // Jika menggunakan event keyup untuk pencarian, trigger event
                         // $(searchInput).trigger('keyup');
