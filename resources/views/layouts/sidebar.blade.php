@@ -52,7 +52,7 @@
                     </div> --}}
 
                     @if (auth()->check() &&
-                            auth()->user()->hasRole(['security', 'super_admin', 'admin']))
+                            auth()->user()->hasRole(['security', 'super_admin']))
                         <div class="menu-item py-2">
                             <span class="menu-link menu-center">
                                 <span class="menu-icon me-0">
@@ -70,7 +70,7 @@
                         <span class="menu-link menu-center">
                             <span class="menu-icon me-0">
                                 @if (auth()->check() &&
-                                        auth()->user()->hasRole(['security', 'super_admin', 'admin']))
+                                        auth()->user()->hasRole(['security', 'super_admin']))
                                     <a class="btn btm-sm menu-icon me-0" href="/future-visitors"
                                         data-kt-menu-overflow="true" data-bs-toggle="tooltip" data-bs-placement="right"
                                         title="Verifikasi Tamu">
