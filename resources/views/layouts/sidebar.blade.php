@@ -51,23 +51,26 @@
                         <!--end:Menu link-->
                     </div> --}}
 
-                    <div class="menu-item py-2">
-                        <span class="menu-link menu-center">
-                            <span class="menu-icon me-0">
-                                <a class="btn btm-sm menu-icon me-0" href="/visitors/registrasi"
-                                    data-kt-menu-overflow="true" data-bs-toggle="tooltip" data-bs-placement="right"
-                                    title="Registrasi Tamu">
-                                    <i class="ki-outline ki-faceid fs-2x"></i>
-                                </a>
+                    @if (auth()->check() &&
+                            auth()->user()->hasRole(['security', 'super_admin', 'admin']))
+                        <div class="menu-item py-2">
+                            <span class="menu-link menu-center">
+                                <span class="menu-icon me-0">
+                                    <a class="btn btm-sm menu-icon me-0" href="/visitors/registrasi"
+                                        data-kt-menu-overflow="true" data-bs-toggle="tooltip" data-bs-placement="right"
+                                        title="Registrasi Tamu">
+                                        <i class="ki-outline ki-faceid fs-2x"></i>
+                                    </a>
+                                </span>
                             </span>
-                        </span>
-                    </div>
+                        </div>
+                    @endif
 
                     <div class="menu-item py-2">
                         <span class="menu-link menu-center">
                             <span class="menu-icon me-0">
                                 @if (auth()->check() &&
-                                        auth()->user()->hasRole(['security', 'super_admin', 'pengelola', 'admin']))
+                                        auth()->user()->hasRole(['security', 'super_admin', 'admin']))
                                     <a class="btn btm-sm menu-icon me-0" href="/future-visitors"
                                         data-kt-menu-overflow="true" data-bs-toggle="tooltip" data-bs-placement="right"
                                         title="Verifikasi Tamu">
@@ -85,92 +88,102 @@
                         </span>
                     </div>
 
-                    <div class="menu-item py-2">
-                        <span class="menu-link menu-center">
-                            <span class="menu-icon me-0">
-                                <a class="btn btm-sm menu-icon me-0" href="/visitors/pengunjung_aktif"
-                                    data-kt-menu-overflow="true" data-bs-toggle="tooltip" data-bs-placement="right"
-                                    title="Monitoring">
-                                    <i class="ki-outline ki-eye fs-2x"> </i>
-                                </a>
+                    @if (auth()->check() &&
+                            auth()->user()->hasRole(['security', 'super_admin', 'admin']))
+                        <div class="menu-item py-2">
+                            <span class="menu-link menu-center">
+                                <span class="menu-icon me-0">
+                                    <a class="btn btm-sm menu-icon me-0" href="/visitors/pengunjung_aktif"
+                                        data-kt-menu-overflow="true" data-bs-toggle="tooltip" data-bs-placement="right"
+                                        title="Monitoring">
+                                        <i class="ki-outline ki-eye fs-2x"> </i>
+                                    </a>
+                                </span>
                             </span>
-                        </span>
-                    </div>
-
-                    <!--begin:Menu item-->
-                    <div class="menu-item py-2">
-                        <!--begin:Menu link-->
-                        <span class="menu-link menu-center">
-                            <span class="menu-icon me-0">
-                                <a class="btn btm-sm menu-icon me-0" href="/users" data-kt-menu-overflow="true"
-                                    data-bs-toggle="tooltip" data-bs-placement="right" title="Users">
-                                    <i class="ki-outline ki-people fs-2x"> </i>
-                                </a>
-                            </span>
-                        </span>
-                        <!--end:Menu link-->
-                    </div>
-                    <!--end:Menu item-->
-
-                    <!--begin:Menu item-->
-                    <div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start"
-                        class="menu-item py-2">
-                        <!--begin:Menu link-->
-                        <span class="menu-link menu-center">
-                            <span class="menu-icon me-0">
-                                <i class="ki-outline ki-setting-2 fs-2x"> </i>
-                            </span>
-                        </span>
-                        <!--end:Menu link-->
-                        <!--begin:Menu sub-->
-                        <div class="menu-sub menu-sub-dropdown px-2 py-4 w-250px mh-75 overflow-auto">
-                            <!--begin:Menu item-->
-                            <div class="menu-item">
-                                <!--begin:Menu content-->
-                                <div class="menu-content">
-                                    <span class="menu-section fs-5 fw-bolder ps-1 py-1">Pengaturan</span>
-                                </div>
-                                <!--end:Menu content-->
-                            </div>
-                            <!--end:Menu item-->
-                            <!--begin:Menu item-->
-                            <div class="menu-item">
-                                <!--begin:Menu link-->
-                                <a class="menu-link" href="/address">
-                                    <span class="menu-bullet">
-                                        <span class="bullet bullet-dot"></span>
-                                    </span>
-                                    <span class="menu-title">Alamat Rumah</span>
-                                </a>
-                                <!--end:Menu link-->
-                            </div>
-                            <div class="menu-item">
-                                <!--begin:Menu link-->
-                                <a class="menu-link" href="/companies">
-                                    <span class="menu-bullet">
-                                        <span class="bullet bullet-dot"></span>
-                                    </span>
-                                    <span class="menu-title">Kurir/Trasportasi Online</span>
-                                </a>
-                                <!--end:Menu link-->
-                            </div>
-                            <!--end:Menu item-->
-                            <!--begin:Menu item-->
-                            <div class="menu-item">
-                                <!--begin:Menu link-->
-                                <a class="menu-link" href="/roles">
-                                    <span class="menu-bullet">
-                                        <span class="bullet bullet-dot"></span>
-                                    </span>
-                                    <span class="menu-title">Role Users</span>
-                                </a>
-                                <!--end:Menu link-->
-                            </div>
-                            <!--end:Menu item-->
-
                         </div>
-                        <!--end:Menu sub-->
-                    </div>
+                    @endif
+
+                    @if (auth()->check() &&
+                            auth()->user()->hasRole(['super_admin', 'admin']))
+                        <!--begin:Menu item-->
+                        <div class="menu-item py-2">
+                            <!--begin:Menu link-->
+                            <span class="menu-link menu-center">
+                                <span class="menu-icon me-0">
+                                    <a class="btn btm-sm menu-icon me-0" href="/users" data-kt-menu-overflow="true"
+                                        data-bs-toggle="tooltip" data-bs-placement="right" title="Users">
+                                        <i class="ki-outline ki-people fs-2x"> </i>
+                                    </a>
+                                </span>
+                            </span>
+                            <!--end:Menu link-->
+                        </div>
+                    @endif
+
+
+
+                    @if (auth()->check() &&
+                            auth()->user()->hasRole(['super_admin', 'admin']))
+                        <!--begin:Menu item-->
+                        <div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start"
+                            class="menu-item py-2">
+                            <!--begin:Menu link-->
+                            <span class="menu-link menu-center">
+                                <span class="menu-icon me-0">
+                                    <i class="ki-outline ki-setting-2 fs-2x"> </i>
+                                </span>
+                            </span>
+                            <!--end:Menu link-->
+                            <!--begin:Menu sub-->
+                            <div class="menu-sub menu-sub-dropdown px-2 py-4 w-250px mh-75 overflow-auto">
+                                <!--begin:Menu item-->
+                                <div class="menu-item">
+                                    <!--begin:Menu content-->
+                                    <div class="menu-content">
+                                        <span class="menu-section fs-5 fw-bolder ps-1 py-1">Pengaturan</span>
+                                    </div>
+                                    <!--end:Menu content-->
+                                </div>
+                                <!--end:Menu item-->
+                                <!--begin:Menu item-->
+                                <div class="menu-item">
+                                    <!--begin:Menu link-->
+                                    <a class="menu-link" href="/address">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot"></span>
+                                        </span>
+                                        <span class="menu-title">Alamat Rumah</span>
+                                    </a>
+                                    <!--end:Menu link-->
+                                </div>
+                                <div class="menu-item">
+                                    <!--begin:Menu link-->
+                                    <a class="menu-link" href="/companies">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot"></span>
+                                        </span>
+                                        <span class="menu-title">Kurir/Trasportasi Online</span>
+                                    </a>
+                                    <!--end:Menu link-->
+                                </div>
+                                <!--end:Menu item-->
+                                <!--begin:Menu item-->
+                                <div class="menu-item">
+                                    <!--begin:Menu link-->
+                                    <a class="menu-link" href="/roles">
+                                        <span class="menu-bullet">
+                                            <span class="bullet bullet-dot"></span>
+                                        </span>
+                                        <span class="menu-title">Role Users</span>
+                                    </a>
+                                    <!--end:Menu link-->
+                                </div>
+                                <!--end:Menu item-->
+
+                            </div>
+                            <!--end:Menu sub-->
+                        </div>
+                    @endif
                 </div>
                 <!--end::Menu-->
             </div>
