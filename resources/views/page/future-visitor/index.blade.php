@@ -84,7 +84,7 @@
                                     <th>Tujuan</th>
                                     <th>Blok</th>
                                     <th>Tanggal</th>
-                                    <th>Estimasi Jam Kunjungan</th>
+                                    <th>Estimasi Kunjungan</th>
                                     <th>No. Plat Kendaraan</th>
                                     <th>Status</th>
                                     <th>Actions</th>

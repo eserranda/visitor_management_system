@@ -78,8 +78,9 @@
                                     <th>Pengunjung</th>
                                     <th>Tujuan</th>
                                     <th>Jenis Pengunjung</th>
-                                    <th>Jam Masuk</th>
-                                    <th>Jam Keluar</th>
+                                    <th>Nomor Plat</th>
+                                    <th>Waktu Kunjungan</th>
+                                    <th>Waktu Keluar</th>
                                     <th>Status</th>
                                     <th>Actions</th>
                                 </tr>
@@ -247,6 +248,11 @@
                                 {
                                     data: 'visitor_type',
                                     name: 'visitor_type',
+                                    orderable: true,
+                                },
+                                {
+                                    data: 'vehicle_number',
+                                    name: 'vehicle_number',
                                     orderable: true,
                                 },
                                 {
