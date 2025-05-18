@@ -63,43 +63,34 @@
                         </span>
                     </div>
 
-                    @if (auth()->check() &&
-                            auth()->user()->hasRole(['security', 'super_admin', 'pengelola', 'admin']))
-                        <div class="menu-item py-2">
-                            <span class="menu-link menu-center">
-                                <span class="menu-icon me-0">
+                    <div class="menu-item py-2">
+                        <span class="menu-link menu-center">
+                            <span class="menu-icon me-0">
+                                @if (auth()->check() &&
+                                        auth()->user()->hasRole(['security', 'super_admin', 'pengelola', 'admin']))
                                     <a class="btn btm-sm menu-icon me-0" href="/future-visitors"
                                         data-kt-menu-overflow="true" data-bs-toggle="tooltip" data-bs-placement="right"
                                         title="Verifikasi Tamu">
                                         <i class="ki-duotone ki-check fs-2x"></i>
                                     </a>
-                                </span>
-                            </span>
-                        </div>
-                    @endif
-
-                    @if (auth()->check() &&
-                            auth()->user()->hasRole(['penghuni', 'super_admin']))
-                        <div class="menu-item py-2">
-                            <span class="menu-link menu-center">
-                                <span class="menu-icon me-0">
+                                @elseif (auth()->check() &&
+                                        auth()->user()->hasRole(['penghuni', 'super_admin']))
                                     <a class="btn btm-sm menu-icon me-0" href="/future-visitors"
                                         data-kt-menu-overflow="true" data-bs-toggle="tooltip" data-bs-placement="right"
                                         title="Akses Masuk">
                                         <i class="ki-duotone ki-check fs-2x"></i>
                                     </a>
-                                </span>
+                                @endif
                             </span>
-                        </div>
-                    @endif
-
+                        </span>
+                    </div>
 
                     <div class="menu-item py-2">
                         <span class="menu-link menu-center">
                             <span class="menu-icon me-0">
                                 <a class="btn btm-sm menu-icon me-0" href="/visitors/pengunjung_aktif"
                                     data-kt-menu-overflow="true" data-bs-toggle="tooltip" data-bs-placement="right"
-                                    title="Pengunjung Aktif">
+                                    title="Monitoring">
                                     <i class="ki-outline ki-eye fs-2x"> </i>
                                 </a>
                             </span>

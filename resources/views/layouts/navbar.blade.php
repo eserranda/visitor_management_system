@@ -276,8 +276,7 @@
                 <!--end::Menu item-->
                 <!--begin::Menu item-->
                 <div class="menu-item px-5">
-                    <a href="../../demo25/dist/authentication/layouts/corporate/sign-in.html"
-                        class="menu-link px-5">Sign Out</a>
+                    <a href="/auth/logout" class="menu-link px-5">Logout</a>
                 </div>
                 <!--end::Menu item-->
             </div>
