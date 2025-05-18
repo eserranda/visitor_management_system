@@ -169,7 +169,6 @@ class VisitorsController extends Controller
         }
 
         $photoPath = null;
-        $photoPath = null;
         if ($request->input('captured_image')) {
             $image = $request->input('captured_image');
             $image = str_replace('data:image/jpeg;base64,', '', $image);

@@ -3,7 +3,7 @@
     <link href="{{ asset('assets') }}/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
 
     @section('title')
-        Data Pengunjung Aktif
+        Data Monitoring Pengunjung Aktif
     @endsection
 
     @section('content')
@@ -168,7 +168,7 @@
                 var datatable;
 
                 var exportButtons = () => {
-                    const documentTitle = 'Data Kurir/Transportasi';
+                    const documentTitle = 'Data Monitoring Pengunjung Aktif';
 
                     var buttons = new $.fn.dataTable.Buttons(datatable, {
                         buttons: [{

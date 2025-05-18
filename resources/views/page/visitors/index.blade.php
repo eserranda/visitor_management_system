@@ -197,7 +197,7 @@
                 var datatable;
 
                 var exportButtons = () => {
-                    const documentTitle = 'Data Kurir/Transportasi';
+                    const documentTitle = 'Data Laporan Pengunjung';
 
                     var buttons = new $.fn.dataTable.Buttons(datatable, {
                         buttons: [{
