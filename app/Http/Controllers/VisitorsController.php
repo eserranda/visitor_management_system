@@ -159,6 +159,7 @@ class VisitorsController extends Controller
             'required' => ':attribute harus diisi',
             'string' => ':attribute harus berupa string',
             'integer' => ':attribute harus berupa angka',
+            'exists' => ':attribute tidak ada',
         ]);
 
         if ($validator->fails()) {
