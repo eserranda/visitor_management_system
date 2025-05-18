@@ -171,18 +171,28 @@ class VisitorsController extends Controller
 
         $photoPath = null;
         if ($request->input('captured_image')) {
-            $image = $request->input('captured_image');
-            $image = str_replace('data:image/jpeg;base64,', '', $image);
-            $image = str_replace(' ', '+', $image);
+            $imageData = $request->input('captured_image');
+            $imageData = str_replace('data:image/jpeg;base64,', '', $imageData);
+            $imageData = str_replace(' ', '+', $imageData);
+
             $imageName = 'visitor_' . time() . '.jpg';
 
-            // Simpan menggunakan Storage facade
-            $path = Storage::disk('public')->put('images/visitor/' . $imageName, base64_decode($image));
+            // Direktori relatif dari folder 'storage/app/public'
+            $directory = 'images/visitor/';
 
-            // Path untuk database
-            $photoPath = 'storage/images/visitor/' . $imageName;
+            // Pastikan folder ada
+            if (!file_exists(public_path($directory))) {
+                mkdir(public_path($directory), 0755, true);
+            }
+
+            // Simpan file ke public/images/visitor/
+            file_put_contents(public_path($directory . $imageName), base64_decode($imageData));
+
+            // Path untuk database (contoh: 'images/visitor/visitor_123456.jpg')
+            $photoPath = $directory . $imageName;
         }
 
+        // Simpan data ke database
         $visitor = Visitors::create([
             'name' => $request->input('name'),
             'user_id' => $request->input('user_id'),
