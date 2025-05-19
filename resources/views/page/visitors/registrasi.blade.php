@@ -193,10 +193,13 @@
                             <div>
                                 <button type="submit" class="btn btn-lg btn-primary me-3"
                                     data-kt-stepper-action="submit">
-                                    <span class="indicator-label">Submit
-                                        <i class="ki-outline ki-arrow-right fs-3 ms-2 me-0"></i></span>
+                                    <span class="indicator-label">
+                                        Simpan
+                                    </span>
                                     <span class="indicator-progress">Please wait...
-                                        <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                                        <span class="spinner-border spinner-border-sm align-middle ms-2">
+                                        </span>
+                                    </span>
                                 </button>
                                 <button type="button" class="btn btn-lg btn-primary"
                                     data-kt-stepper-action="next">Continue
