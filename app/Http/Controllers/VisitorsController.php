@@ -282,7 +282,16 @@ class VisitorsController extends Controller
      */
     public function destroy(Visitors $visitors, $id)
     {
-        $visitor = Visitors::find($id);
+        $visitor = $visitors::find($id);
+
+        $img_url = $visitor->img_url;
+        if ($img_url) {
+            $filePath = public_path($img_url);
+            if (file_exists($filePath)) {
+                unlink($filePath);
+            }
+        }
+
         $visitor->delete();
 
         if (!$visitor) {

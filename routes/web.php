@@ -22,6 +22,7 @@ Route::prefix('users')->controller(UserController::class)->middleware(['auth'])-
     Route::get('/', 'index');
     Route::get('/data', 'getAllDataTable')->name('users.data');
     Route::post('/register', 'register');
+    Route::post('/update-status', 'updateStatus');
     Route::get('/add', 'add');
     Route::get('/findById/{id}', 'findById');
     Route::post('/update/{id}', 'update');

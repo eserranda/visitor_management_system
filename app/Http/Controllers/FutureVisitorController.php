@@ -111,12 +111,8 @@ class FutureVisitorController extends Controller
         return datatables()
             ->of($futureVisitors)
             ->addIndexColumn()
-            ->editColumn('arrival_date', function ($futureVisitor) {
-                return Carbon::parse($futureVisitor->arrival_date)->format('d-m-Y');
-            })
-
             ->editColumn('estimated_arrival_time', function ($futureVisitor) {
-                return Carbon::parse($futureVisitor->estimated_arrival_time)->format('H:i');
+                return Carbon::parse($futureVisitor->arrival_date)->format('d-m-Y') . ' ' . Carbon::parse($futureVisitor->estimated_arrival_time)->format('H:i') . ' WITA';
             })
             ->editColumn('user_id', function ($futureVisitor) {
                 return $futureVisitor->user->nickname ?? '-';
@@ -233,35 +229,19 @@ class FutureVisitorController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(FutureVisitor $futureVisitor)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(FutureVisitor $futureVisitor)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, FutureVisitor $futureVisitor)
-    {
-        //
-    }
-
-    /**
      * Remove the specified resource from storage.
      */
-    public function destroy(FutureVisitor $futureVisitor, $id)
+    public function destroy(FutureVisitor $futureVisitors, $id)
     {
-        $futureVisitor = $futureVisitor::find($id);
+        $futureVisitor = $futureVisitors::find($id);
+        // hapus file gambar
+        $img_url = $futureVisitor->img_url;
+        if ($img_url) {
+            $filePath = public_path($img_url);
+            if (file_exists($filePath)) {
+                unlink($filePath);
+            }
+        }
         $futureVisitor->delete();
 
         return response()->json([

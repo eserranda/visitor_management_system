@@ -279,6 +279,10 @@
         document.getElementById('addForm').addEventListener('submit', async (event) => {
             event.preventDefault();
 
+            // disable the submit button
+            const submitButton = event.target.querySelector('[type="submit"]');
+            submitButton.setAttribute('disabled', 'disabled');
+
             const form = event.target;
             const formData = new FormData(form);
 
@@ -329,6 +333,8 @@
                         }
                     });
 
+                    submitButton.removeAttribute('disabled');
+
                     return;
                 }
 
@@ -343,23 +349,10 @@
                     }
                 });
 
-                toastr.options = {
-                    "closeButton": true,
-                    "debug": false,
-                    "newestOnTop": false,
-                    "progressBar": true,
-                    "positionClass": "toastr-top-right",
-                    "preventDuplicates": false,
-                    "onclick": null,
-                    "showDuration": "100",
-                    "hideDuration": "500",
-                    "timeOut": "3000",
-                    "extendedTimeOut": "1000",
-                    "showEasing": "swing",
-                    "hideEasing": "linear",
-                    "showMethod": "fadeIn",
-                    "hideMethod": "fadeOut"
-                };
+                form.reset();
+                // hapus disable pada tombol submit
+                submitButton.removeAttribute('disabled');
+
 
                 toastr.success("Data Berhasil di simpan", "Success");
             } catch (error) {

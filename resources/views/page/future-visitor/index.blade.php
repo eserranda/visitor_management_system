@@ -83,7 +83,6 @@
                                     <th>Nama Tamu</th>
                                     <th>Tujuan</th>
                                     <th>Blok</th>
-                                    <th>Tanggal</th>
                                     <th>Estimasi Kunjungan</th>
                                     <th>No. Plat Kendaraan</th>
                                     <th>Status</th>
@@ -279,10 +278,6 @@
                                 {
                                     data: 'address',
                                     name: 'address',
-                                },
-                                {
-                                    data: 'arrival_date',
-                                    name: 'arrival_date'
                                 },
                                 {
                                     data: 'estimated_arrival_time',

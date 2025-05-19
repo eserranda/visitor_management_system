@@ -25,6 +25,26 @@ class UserController extends Controller
         return redirect()->route('login');
     }
 
+    public function updateStatus(Request $request)
+    {
+        $status = $request->status;
+        if ($status == 'in_house') {
+            $user = User::where('id', Auth::id())->first();
+            $user->status = 'in_house';
+            $user->information = null;
+            $user->save();
+
+            return response()->json(['success' => 'Status updated successfully']);
+        } else {
+            $user = User::where('id', Auth::id())->first();
+            $user->status = 'out_house';
+            $user->information = $request->information;
+            $user->save();
+
+            return response()->json(['success' => 'Status updated successfully']);
+        }
+    }
+
     public function login(Request $request)
     {
         $loginType = filter_var($request->login, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';

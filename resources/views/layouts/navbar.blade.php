@@ -88,23 +88,92 @@
                 <div class="separator my-2"></div>
                 <!--end::Menu separator-->
                 <!--begin::Menu item-->
-                <div class="menu-item px-5">
+                {{-- <div class="menu-item px-5">
                     <a href="../../demo25/dist/account/overview.html" class="menu-link px-5">My
                         Profile</a>
-                </div>
+                </div> --}}
                 <!--end::Menu item-->
                 <!--begin::Menu item-->
-                <div class="menu-item px-5">
+                {{-- <div class="menu-item px-5">
                     <a href="../../demo25/dist/apps/projects/list.html" class="menu-link px-5">
                         <span class="menu-text">My Projects</span>
                         <span class="menu-badge">
                             <span class="badge badge-light-danger badge-circle fw-bold fs-7">3</span>
                         </span>
                     </a>
-                </div>
+                </div> --}}
                 <!--end::Menu item-->
+
+                <div class="menu-item px-5">
+                    <a href="../../demo25/dist/account/statements.html" class="menu-link px-5">Status</a>
+                </div>
+
+                <div class="menu-item px-5">
+                    <div class="menu-content px-5">
+                        <label class="form-check form-switch form-check-custom form-check-solid">
+                            <input class="form-check-input w-30px h-20px" type="checkbox" value="1"
+                                checked="checked" name="notifications" id="notificationSwitch" />
+                            <span class="form-check-label text-muted fs-7" id="statusText">Loading...</span>
+                        </label>
+                    </div>
+                </div>
+                <script>
+                    const switchElement = document.getElementById('notificationSwitch');
+                    const statusText = document.getElementById('statusText');
+
+                    // Cek apakah ada data di localStorage
+                    const savedState = localStorage.getItem('notificationStatus');
+                    if (savedState === 'in_house') {
+                        switchElement.checked = true;
+                        statusText.textContent = 'Berada Di Rumah';
+                    } else {
+                        switchElement.checked = false;
+                        statusText.textContent = 'Berada Di Luar';
+                    }
+
+                    // munculkan alert saat switch diubah
+                    switchElement.addEventListener('change', function() {
+                        if (!this.checked) {
+                            // show modal
+                            $('#messageModal').modal('show');
+                        } else {
+                            localStorage.setItem('notificationStatus', 'in_house');
+                            statusText.textContent = 'Berada Di Rumah';
+
+                            const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+                            try {
+                                fetch('/users/update-status', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'Accept': 'application/json',
+                                            'X-CSRF-TOKEN': csrfToken
+                                        },
+                                        body: JSON.stringify({
+                                            status: 'in_house'
+                                        }),
+                                    })
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        console.log(data);
+                                        if (data.success) {
+                                            toastr.success("Data Berhasil di simpan", "Success");
+                                        } else {
+                                            toastr.error("Data Gagal di simpan", "Error");
+                                        }
+                                    })
+                                    .catch(error => {
+                                        console.error('Error:', error);
+                                        toastr.error("Data Gagal di simpan", "Error");
+                                    });
+                            } catch (error) {
+                                console.error('Error:', error);
+                            }
+                        }
+                    });
+                </script>
                 <!--begin::Menu item-->
-                <div class="menu-item px-5" data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
+                {{-- <div class="menu-item px-5" data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
                     data-kt-menu-placement="left-start" data-kt-menu-offset="-15px, 0">
                     <a href="#" class="menu-link px-5">
                         <span class="menu-title">My Subscription</span>
@@ -152,12 +221,12 @@
                         <!--end::Menu item-->
                     </div>
                     <!--end::Menu sub-->
-                </div>
+                </div> --}}
                 <!--end::Menu item-->
                 <!--begin::Menu item-->
-                <div class="menu-item px-5">
+                {{-- <div class="menu-item px-5">
                     <a href="../../demo25/dist/account/statements.html" class="menu-link px-5">My Statements</a>
-                </div>
+                </div> --}}
                 <!--end::Menu item-->
                 <!--begin::Menu separator-->
                 <div class="separator my-2"></div>
@@ -177,8 +246,7 @@
                         data-kt-menu="true" data-kt-element="theme-mode-menu">
                         <!--begin::Menu item-->
                         <div class="menu-item px-3 my-0">
-                            <a href="#" class="menu-link px-3 py-2" data-kt-element="mode"
-                                data-kt-value="light">
+                            <a href="#" class="menu-link px-3 py-2" data-kt-element="mode" data-kt-value="light">
                                 <span class="menu-icon" data-kt-element="icon">
                                     <i class="ki-outline ki-night-day fs-2"></i>
                                 </span>
@@ -188,8 +256,7 @@
                         <!--end::Menu item-->
                         <!--begin::Menu item-->
                         <div class="menu-item px-3 my-0">
-                            <a href="#" class="menu-link px-3 py-2" data-kt-element="mode"
-                                data-kt-value="dark">
+                            <a href="#" class="menu-link px-3 py-2" data-kt-element="mode" data-kt-value="dark">
                                 <span class="menu-icon" data-kt-element="icon">
                                     <i class="ki-outline ki-moon fs-2"></i>
                                 </span>
@@ -199,8 +266,7 @@
                         <!--end::Menu item-->
                         <!--begin::Menu item-->
                         <div class="menu-item px-3 my-0">
-                            <a href="#" class="menu-link px-3 py-2" data-kt-element="mode"
-                                data-kt-value="system">
+                            <a href="#" class="menu-link px-3 py-2" data-kt-element="mode" data-kt-value="system">
                                 <span class="menu-icon" data-kt-element="icon">
                                     <i class="ki-outline ki-screen fs-2"></i>
                                 </span>
