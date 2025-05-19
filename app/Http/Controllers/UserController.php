@@ -33,15 +33,20 @@ class UserController extends Controller
             $user->status = 'in_house';
             $user->information = null;
             $user->save();
-
-            return response()->json(['success' => 'Status updated successfully']);
         } else {
             $user = User::where('id', Auth::id())->first();
             $user->status = 'out_house';
             $user->information = $request->information;
             $user->save();
+        }
 
-            return response()->json(['success' => 'Status updated successfully']);
+        if ($user) {
+            return response()->json(['success' => 'Status updated successfully'], 200);
+        } else {
+            return response()->json([
+                'success' => false,
+                'messages' => 'Data user tidak ditemukan'
+            ], 500);
         }
     }
 

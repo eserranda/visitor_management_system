@@ -250,194 +250,215 @@
                                 <div class="stepper-line h-40px"></div>
                             </div>
                         </div>
+
+                        <h4 class="text-dark mt-3">Status Penghuni</h4>
+                        <div class="badge badge-light-success" id="status">-</div>
+                        <h5 class="text-dark mt-4">Pesan</h5>
+                        <div class="fw-semibold fs-6 text-muted" id="user_message">-</div>
+
                     </div>
+
                 </div>
             </div>
-        </div>
-    </div>
-@endsection
+        @endsection
 
-@push('scripts')
-    <script src="{{ asset('assets') }}/js/camera.js"></script>
-    <script>
-        // Stepper lement
-        var element = document.querySelector("#kt_stepper_example_vertical");
+        @push('scripts')
+            <script src="{{ asset('assets') }}/js/camera.js"></script>
+            <script>
+                // Stepper lement
+                var element = document.querySelector("#kt_stepper_example_vertical");
 
-        // Initialize Stepper
-        var stepper = new KTStepper(element);
+                // Initialize Stepper
+                var stepper = new KTStepper(element);
 
-        // Handle next step
-        stepper.on("kt.stepper.next", function(stepper) {
-            stepper.goNext(); // go next step
-        });
-
-        // Handle previous step
-        stepper.on("kt.stepper.previous", function(stepper) {
-            stepper.goPrevious(); // go previous step
-        });
-
-        document.getElementById('addForm').addEventListener('submit', async (event) => {
-            event.preventDefault();
-
-            // disable the submit button
-            const submitButton = event.target.querySelector('[type="submit"]');
-            submitButton.setAttribute('disabled', 'disabled');
-
-            const form = event.target;
-            const formData = new FormData(form);
-
-            const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
-
-            try {
-                const response = await fetch('/visitors/store', {
-                    method: 'POST',
-                    headers: {
-                        'Accept': 'application/json',
-                        'X-CSRF-TOKEN': csrfToken
-                    },
-                    body: formData,
+                // Handle next step
+                stepper.on("kt.stepper.next", function(stepper) {
+                    stepper.goNext(); // go next step
                 });
 
-                const data = await response.json();
-                console.log(data);
-                if (!data.success) {
-                    Object.keys(data.messages).forEach(fieldName => {
-                        const inputField = document.getElementById(fieldName);
-                        if (fieldName === 'user_id') {
-                            toastr.error("Pilih Lokasi Tujuan Pengunjung", "Error");
-                        } else {
-                            inputField.classList.add('is-invalid');
-                            if (inputField.nextElementSibling) {
-                                inputField.nextElementSibling.textContent = data.messages[fieldName][0];
-                            }
-                        }
-                    });
-
-                    const validFields = document.querySelectorAll('.is-invalid');
-                    validFields.forEach(validField => {
-                        const fieldName = validField.id;
-                        if (!data.messages[fieldName]) {
-                            validField.classList.remove('is-invalid');
-                            if (validField.nextElementSibling) {
-                                validField.nextElementSibling.textContent = '';
-                            }
-                        }
-                    });
-
-                    Swal.fire({
-                        text: 'Pastikan semua data terisi dengan benar!',
-                        icon: 'error',
-                        confirmButtonText: "Ok, got it!",
-                        customClass: {
-                            confirmButton: "btn btn-primary"
-                        }
-                    });
-
-                    submitButton.removeAttribute('disabled');
-
-                    return;
-                }
-
-                const invalidInputs = document.querySelectorAll('.is-invalid');
-                invalidInputs.forEach(invalidInput => {
-                    invalidInput.value = '';
-                    invalidInput.classList.remove('is-invalid');
-                    const errorNextSibling = invalidInput.nextElementSibling;
-                    if (errorNextSibling && errorNextSibling.classList.contains(
-                            'invalid-feedback')) {
-                        errorNextSibling.textContent = '';
-                    }
+                // Handle previous step
+                stepper.on("kt.stepper.previous", function(stepper) {
+                    stepper.goPrevious(); // go previous step
                 });
 
-                form.reset();
-                // hapus disable pada tombol submit
-                submitButton.removeAttribute('disabled');
+                document.getElementById('addForm').addEventListener('submit', async (event) => {
+                    event.preventDefault();
 
+                    // disable the submit button
+                    const submitButton = event.target.querySelector('[type="submit"]');
+                    submitButton.setAttribute('disabled', 'disabled');
 
-                toastr.success("Data Berhasil di simpan", "Success");
-            } catch (error) {
-                console.error(error);
-            }
-        });
+                    const form = event.target;
+                    const formData = new FormData(form);
 
-        document.addEventListener('DOMContentLoaded', function() {
-            allAddress();
-        });
+                    const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
 
-        document.getElementById('visitor_type').addEventListener('change', function() {
-            const purpose = document.getElementById('purpose');
-            const visitorType = document.getElementById('visitor_type').value;
+                    try {
+                        const response = await fetch('/visitors/store', {
+                            method: 'POST',
+                            headers: {
+                                'Accept': 'application/json',
+                                'X-CSRF-TOKEN': csrfToken
+                            },
+                            body: formData,
+                        });
 
-            if (visitorType === 'tamu') {
-                document.getElementById('list_company').style.display = 'none';
-                // purpose.value = 'Bertamu';
-            } else if (visitorType === 'kurir') {
-                document.getElementById('transportasi_onlie').style.display = 'none';
-                document.getElementById('list_company').style.display = 'block';
-                // purpose.value = 'Mengantar Barang';
-            } else if (visitorType === 'transportasi_online') {
-                document.getElementById('list_company').style.display = 'none';
-                document.getElementById('transportasi_onlie').style.display = 'block';
-                // purpose.value = 'Transportasi Online';
-            }
-        });
-
-        function allAddress() {
-            fetch('/address/getAddressesGroupedByBlock')
-                .then(response => response.json())
-                .then(data => {
-                    const selectedButton = document.getElementById('user_id');
-                    const container = document.getElementById('block-buttons');
-                    container.innerHTML = '';
-
-                    for (const block in data) {
-                        if (data.hasOwnProperty(block)) {
-                            const blockWrapper = document.createElement('div');
-                            const title = document.createElement('div');
-                            title.className = 'fw-bold block-title mb-2';
-                            title.style.fontSize = '16px';
-                            title.innerText = 'Blok ' + block;
-                            blockWrapper.appendChild(title);
-
-                            const buttonRow = document.createElement('div');
-                            buttonRow.type = 'button';
-                            buttonRow.style.display = 'flex';
-                            buttonRow.style.flexWrap = 'wrap';
-                            buttonRow.style.gap = '10px';
-
-                            data[block].forEach(item => {
-                                const button = document.createElement('button');
-                                button.className =
-                                    'house-button btn btn-primary btn-active-light-success';
-                                button.innerText = item.house_number;
-
-                                button.dataset.bsToggle = 'tooltip';
-                                button.dataset.bsPlacement = 'top';
-                                button.title = item.user_nickname;
-
-                                button.addEventListener('click', function(e) {
-                                    e.preventDefault();
-                                    document.querySelectorAll('.house-button').forEach(btn => btn
-                                        .classList.remove('active'));
-                                    button.classList.add('active');
-                                    selectedButton.value = item.user_id;
-                                });
-
-                                buttonRow.appendChild(button);
+                        const data = await response.json();
+                        console.log(data);
+                        if (!data.success) {
+                            Object.keys(data.messages).forEach(fieldName => {
+                                const inputField = document.getElementById(fieldName);
+                                if (fieldName === 'user_id') {
+                                    toastr.error("Pilih Lokasi Tujuan Pengunjung", "Error");
+                                } else {
+                                    inputField.classList.add('is-invalid');
+                                    if (inputField.nextElementSibling) {
+                                        inputField.nextElementSibling.textContent = data.messages[fieldName][0];
+                                    }
+                                }
                             });
 
-                            blockWrapper.appendChild(buttonRow);
-                            container.appendChild(blockWrapper);
+                            const validFields = document.querySelectorAll('.is-invalid');
+                            validFields.forEach(validField => {
+                                const fieldName = validField.id;
+                                if (!data.messages[fieldName]) {
+                                    validField.classList.remove('is-invalid');
+                                    if (validField.nextElementSibling) {
+                                        validField.nextElementSibling.textContent = '';
+                                    }
+                                }
+                            });
+
+                            Swal.fire({
+                                text: 'Pastikan semua data terisi dengan benar!',
+                                icon: 'error',
+                                confirmButtonText: "Ok, got it!",
+                                customClass: {
+                                    confirmButton: "btn btn-primary"
+                                }
+                            });
+
+                            submitButton.removeAttribute('disabled');
+
+                            return;
                         }
+
+                        const invalidInputs = document.querySelectorAll('.is-invalid');
+                        invalidInputs.forEach(invalidInput => {
+                            invalidInput.value = '';
+                            invalidInput.classList.remove('is-invalid');
+                            const errorNextSibling = invalidInput.nextElementSibling;
+                            if (errorNextSibling && errorNextSibling.classList.contains(
+                                    'invalid-feedback')) {
+                                errorNextSibling.textContent = '';
+                            }
+                        });
+
+                        form.reset();
+                        // hapus disable pada tombol submit
+                        submitButton.removeAttribute('disabled');
+
+
+                        toastr.success("Data Berhasil di simpan", "Success");
+                    } catch (error) {
+                        console.error(error);
                     }
-                    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-                    var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
-                        return new bootstrap.Tooltip(tooltipTriggerEl);
-                    });
-                })
-                .catch(error => {
-                    console.error('Error saat mengambil data:', error);
                 });
-        }
-    </script>
-@endpush
+
+                document.addEventListener('DOMContentLoaded', function() {
+                    allAddress();
+                });
+
+                document.getElementById('visitor_type').addEventListener('change', function() {
+                    const purpose = document.getElementById('purpose');
+                    const visitorType = document.getElementById('visitor_type').value;
+
+                    if (visitorType === 'tamu') {
+                        document.getElementById('list_company').style.display = 'none';
+                        // purpose.value = 'Bertamu';
+                    } else if (visitorType === 'kurir') {
+                        document.getElementById('transportasi_onlie').style.display = 'none';
+                        document.getElementById('list_company').style.display = 'block';
+                        // purpose.value = 'Mengantar Barang';
+                    } else if (visitorType === 'transportasi_online') {
+                        document.getElementById('list_company').style.display = 'none';
+                        document.getElementById('transportasi_onlie').style.display = 'block';
+                        // purpose.value = 'Transportasi Online';
+                    }
+                });
+
+                function allAddress() {
+                    fetch('/address/getAddressesGroupedByBlock')
+                        .then(response => response.json())
+                        .then(data => {
+                            const selectedButton = document.getElementById('user_id');
+                            const container = document.getElementById('block-buttons');
+                            container.innerHTML = '';
+
+                            for (const block in data) {
+                                if (data.hasOwnProperty(block)) {
+                                    const blockWrapper = document.createElement('div');
+                                    const title = document.createElement('div');
+                                    title.className = 'fw-bold block-title mb-2';
+                                    title.style.fontSize = '16px';
+                                    title.innerText = 'Blok ' + block;
+                                    blockWrapper.appendChild(title);
+
+                                    const buttonRow = document.createElement('div');
+                                    buttonRow.type = 'button';
+                                    buttonRow.style.display = 'flex';
+                                    buttonRow.style.flexWrap = 'wrap';
+                                    buttonRow.style.gap = '10px';
+
+                                    data[block].forEach(item => {
+                                        const button = document.createElement('button');
+                                        button.className =
+                                            'house-button btn btn-primary btn-active-light-success';
+                                        button.innerText = item.house_number;
+
+                                        button.dataset.bsToggle = 'tooltip';
+                                        button.dataset.bsPlacement = 'top';
+                                        button.title = item.user_nickname;
+
+                                        button.addEventListener('click', function(e) {
+                                            e.preventDefault();
+                                            userMessage = document.getElementById('user_message')
+                                            if (item.user_message) {
+                                                userMessage.innerHTML = '"' + item.user_message + '"';
+                                            } else {
+                                                userMessage.innerHTML = '-';
+                                            }
+                                            statusUser = document.getElementById('status');
+                                            if (item.user_status == 'in_house') {
+                                                statusUser.classList.remove('badge-light-danger');
+                                                statusUser.classList.add('badge-light-success');
+                                                statusUser.innerHTML = 'In House';
+                                            } else {
+                                                statusUser.classList.remove('badge-light-success');
+                                                statusUser.classList.add('badge-light-danger');
+                                                statusUser.innerHTML = 'Out House';
+                                            }
+                                            document.querySelectorAll('.house-button').forEach(btn => btn
+                                                .classList.remove('active'));
+                                            button.classList.add('active');
+                                            selectedButton.value = item.user_id;
+                                        });
+
+                                        buttonRow.appendChild(button);
+                                    });
+
+                                    blockWrapper.appendChild(buttonRow);
+                                    container.appendChild(blockWrapper);
+                                }
+                            }
+                            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+                            var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+                                return new bootstrap.Tooltip(tooltipTriggerEl);
+                            });
+                        })
+                        .catch(error => {
+                            console.error('Error saat mengambil data:', error);
+                        });
+                }
+            </script>
+        @endpush

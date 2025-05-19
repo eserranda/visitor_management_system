@@ -142,6 +142,7 @@
                 await fetch(`/future-visitors/detail/` + id)
                     .then(response => response.json())
                     .then(data => {
+                        document.getElementById('detail_id').value = data.id;
                         document.getElementById('detail_visitor_name').innerHTML = data.visitor_name;
                         document.getElementById('detail_arrival_date').innerHTML = data.arrival_date;
                         document.getElementById('detail_vehicle_type').innerHTML = data.vehicle_type;

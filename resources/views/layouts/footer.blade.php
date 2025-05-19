@@ -121,19 +121,6 @@
                     text: 'Something went wrong!',
                 });
 
-                // jika ada error, hapus status dari localStorage
-                localStorage.setItem('notificationStatus', 'in_house');
-
-                // Cek status awal (dari localStorage atau database)
-                const savedState = localStorage.getItem('notificationStatus');
-                if (savedState === 'in_house') {
-                    switchElement.checked = true;
-                    statusText.textContent = 'Berada Di Rumah';
-                } else {
-                    switchElement.checked = false;
-                    statusText.textContent = 'Berada Di Luar';
-                }
-
                 return;
             }
 
@@ -148,25 +135,13 @@
                 }
             });
 
-            //simpan status ke localStorage
-            localStorage.setItem('notificationStatus', 'out_house');
-
-            // Cek status awal (dari localStorage atau database)
-            const savedState = localStorage.getItem('notificationStatus');
-            if (savedState === 'in_house') {
-                switchElement.checked = true;
-                statusText.textContent = 'Berada Di Rumah';
-            } else {
-                switchElement.checked = false;
-                statusText.textContent = 'Berada Di Luar';
-            }
-
             form.reset();
-            toastr.success("Data Berhasil di simpan", "Success");
+            toastr.success("Status Berhasil diperbaharui", "Success");
             document.querySelector('[data-bs-dismiss="modal"]').click();
 
         } catch (error) {
             console.error(error);
+            toastr.error("Status gagal diperbaharui", "Error");
         }
     });
 </script>

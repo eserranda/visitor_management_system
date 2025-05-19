@@ -1,15 +1,18 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\VisitorsController;
 use App\Http\Controllers\CompaniesController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FutureVisitorController;
-use App\Http\Controllers\RoleController;
 
-route::get('/', function () {
-    return view('page.dashboard.index');
+
+Route::controller(DashboardController::class)->middleware('auth')->group(function () {
+    Route::get('/', 'index');
+    Route::get('/dashboard', 'index')->name('dashboard');
 });
 
 Route::prefix('auth')->controller(UserController::class)->group(function () {
@@ -38,9 +41,6 @@ Route::prefix('users')->controller(UserController::class)->middleware(['auth'])-
     // Route::get('/edit-profile', 'editProfile');
 });
 
-Route::get('/dashboard', function () {
-    return view('page.dashboard.index');
-});
 
 
 Route::prefix('address')->controller(AddressController::class)->middleware('auth')->group(function () {

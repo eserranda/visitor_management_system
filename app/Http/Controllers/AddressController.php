@@ -62,6 +62,8 @@ class AddressController extends Controller
                 'house_number' => $address->house_number,
                 'user_id' => $address->user_id,
                 'user_nickname' => $address->user->nickname,
+                'user_status' => $address->user->status,
+                'user_message' => $address->user->information,
                 // 'id' => $address->id,
                 // 'street_name' => $address->street_name,
             ];
