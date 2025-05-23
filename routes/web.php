@@ -11,7 +11,7 @@ use App\Http\Controllers\FutureVisitorController;
 
 
 Route::controller(DashboardController::class)->middleware('auth')->group(function () {
-    Route::get('/', 'index');
+    Route::get('/', 'welcome');
     Route::get('/dashboard', 'index')->name('dashboard');
 });
 
@@ -57,6 +57,7 @@ Route::prefix('address')->controller(AddressController::class)->middleware('auth
 Route::prefix('future-visitors')->controller(FutureVisitorController::class)->middleware('auth')->group(function () {
     Route::get('/', 'index');
     Route::post('/store', 'store');
+    Route::post('/visitor-registration', 'visitorRegistration');
     Route::get('/data', 'getAllDataTable')->name('future-visitors.data');
     Route::get('/findById/{id}', 'findById');
     Route::put('/update/{id}', 'update');
@@ -98,6 +99,6 @@ Route::prefix('companies')->controller(CompaniesController::class)->middleware('
     Route::delete('/destroy/{id}', 'destroy');
 });
 
-// Route::get('/address', function () {
-//     return view('page.address.index');
+// Route::get('/', function () {
+//     return view('welcome');
 // });

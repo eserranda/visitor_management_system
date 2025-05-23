@@ -151,6 +151,79 @@ class FutureVisitorController extends Controller
             ->make(true);
     }
 
+    public function visitorRegistration(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'user_id' => 'required|integer',
+            'visitor_name' => 'required|string|max:255',
+            'arrival_date' => 'required|date',
+            'estimated_arrival_time' => 'required|date_format:H:i',
+            'vehicle_number' => 'nullable|string|max:255',
+            'captured_image' => 'required|file|mimes:jpeg,png,jpg|max:5048',
+        ], [
+            'user_id.required' => 'Penghuni harus dipilih',
+            'visitor_name.required' => 'Nama pengunjung harus diisi',
+            'arrival_date.required' => 'Tanggal kedatangan harus diisi',
+            'arrival_date.date' => 'Format tanggal kedatangan tidak valid',
+            'estimated_arrival_time.required' => 'Perkiraan waktu kedatangan harus diisi',
+            'estimated_arrival_time.date_format' => 'Format perkiraan waktu kedatangan tidak valid',
+            'vehicle_number.string' => 'Nomor kendaraan tidak valid',
+            'vehicle_number.max' => 'Nomor kendaraan maksimal 255 karakter',
+            'captured_image.required' => 'Gambar harus diunggah',
+            'captured_image.file' => 'File tidak valid',
+            'captured_image.mimes' => 'Hanya file JPEG, PNG, JPG yang diperbolehkan',
+            'captured_image.max' => 'Ukuran file maksimal 5MB'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'messages' => $validator->errors()
+            ], 422);
+        }
+
+        $photoPath = null;
+        if ($request->file('captured_image')) {
+            $image = $request->file('captured_image');
+
+            $directory = 'images/future_visitor/';
+            $imageName = 'future_visitor_' . time() . '.' . $image->getClientOriginalExtension();
+
+            // pindahkan file ke direktori yang diinginkan
+            $image->move(public_path($directory), $imageName);
+
+            // 'images/future_visitor/namafile.jpg'
+            $photoPath = $directory . $imageName;
+        }
+
+        // cek apakah user memiliki role penghuni
+
+        $user_id = $request->user_id;
+        $address_id = Address::where('user_id', $user_id)->first()->id;
+        $futureVisitor = FutureVisitor::create([
+            'user_id' => $user_id,
+            'address_id' => $address_id,
+            'visitor_name' => $request->visitor_name,
+            'arrival_date' => $request->arrival_date,
+            'estimated_arrival_time' => $request->estimated_arrival_time,
+            'vehicle_number' => $request->vehicle_number,
+            'vehicle_type' => $request->vehicle_type,
+            'img_url' => $photoPath,
+        ]);
+
+        if ($futureVisitor) {
+            return response()->json([
+                'success' => true,
+                'messages' => 'Data berhasil ditambahkan'
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'messages' => 'Data gagal ditambahkan'
+            ], 500);
+        }
+    }
+
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [

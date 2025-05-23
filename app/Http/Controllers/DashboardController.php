@@ -2,13 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Address;
-use App\Models\FutureVisitor;
 use App\Models\Visitors;
 use Illuminate\Http\Request;
+use App\Models\FutureVisitor;
 
 class DashboardController extends Controller
 {
+    public function welcome()
+    {
+        $users = User::whereHas('roles', function ($query) {
+            $query->where('name', 'penghuni');
+        })->get();
+
+        return view('welcome', compact('users'));
+    }
+
     public function index()
     {
         $userId = auth()->user()->id;
