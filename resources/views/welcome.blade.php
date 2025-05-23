@@ -412,10 +412,6 @@
 
                 form.reset();
                 toastr.success("Data Berhasil di simpan", "Success");
-                // $('#addModal').modal('hide');
-                document.querySelector('[data-bs-dismiss="modal"]').click();
-                $('#datatable').DataTable().ajax.reload();
-
             } catch (error) {
                 console.error(error);
             }
