@@ -10,9 +10,9 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FutureVisitorController;
 
 
-Route::controller(DashboardController::class)->middleware('auth')->group(function () {
+Route::controller(DashboardController::class)->group(function () {
     Route::get('/', 'welcome');
-    Route::get('/dashboard', 'index')->name('dashboard');
+    Route::get('/dashboard', 'index')->name('dashboard')->middleware('auth');
 });
 
 Route::prefix('auth')->controller(UserController::class)->group(function () {
