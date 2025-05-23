@@ -89,7 +89,7 @@
                                 <div class="fv-row mb-4">
                                     <label class="required fs-5 fw-semibold mb-2">Password</label>
                                     <input type="password" placeholder="Password" name="password" autocomplete="off"
-                                        class="form-control" />
+                                        class="form-control" value="password" />
                                 </div>
                                 <div class="d-flex flex-stack flex-wrap gap-3 fs-base fw-semibold mb-8">
                                     <div></div>
