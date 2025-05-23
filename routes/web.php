@@ -54,16 +54,16 @@ Route::prefix('address')->controller(AddressController::class)->middleware('auth
     Route::post('/update/{id}', 'update');
 });
 
-Route::prefix('future-visitors')->controller(FutureVisitorController::class)->middleware('auth')->group(function () {
-    Route::get('/', 'index');
-    Route::post('/store', 'store');
+Route::prefix('future-visitors')->controller(FutureVisitorController::class)->group(function () {
+    Route::get('/', 'index')->middleware('auth');
+    Route::post('/store', 'store')->middleware('auth');
     Route::post('/visitor-registration', 'visitorRegistration');
-    Route::get('/data', 'getAllDataTable')->name('future-visitors.data');
-    Route::get('/findById/{id}', 'findById');
-    Route::put('/update/{id}', 'update');
-    Route::get('/detail/{id}', 'detail');
-    Route::delete('/destroy/{id}', 'destroy');
-    Route::post('/update-status/{id}', 'updateStatus');
+    Route::get('/data', 'getAllDataTable')->name('future-visitors.data')->middleware('auth');
+    Route::get('/findById/{id}', 'findById')->middleware('auth');
+    Route::put('/update/{id}', 'update')->middleware('auth');
+    Route::get('/detail/{id}', 'detail')->middleware('auth');
+    Route::delete('/destroy/{id}', 'destroy')->middleware('auth');
+    Route::post('/update-status/{id}', 'updateStatus')->middleware('auth');
 });
 
 Route::prefix('roles')->controller(RoleController::class)->middleware('auth')->group(function () {
