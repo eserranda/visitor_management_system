@@ -131,7 +131,7 @@
                             <div class="card-title d-flex flex-column">
                                 <h3 class="mb-5">Akan Berkunjung</h3>
                                 <div class="d-flex align-items-center">
-                                    <span class="fs-2hx fw-bold text-dark me-2 lh-1 ls-n2">{{ $futureVisitors }}</span>
+                                    <span class="fs-2hx fw-bold text-dark me-2 lh-1 ls-n2">{{ $futurevisitorUser }}</span>
                                     <span class="badge badge-light-success ">
                                         Tamu
                                     </span>

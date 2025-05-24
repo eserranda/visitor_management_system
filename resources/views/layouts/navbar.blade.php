@@ -88,22 +88,23 @@
                 <div class="separator my-2"></div>
                 <!--end::Menu separator-->
                 <!--begin::Menu item-->
-
-                <div class="menu-item px-5">
-                    <span class="menu-link px-5">Status</span>
-                </div>
-
-
-                <div class="menu-item px-5">
-                    <div class="menu-content px-5">
-                        <label class="form-check form-switch form-check-custom form-check-solid">
-                            <input class="form-check-input w-30px h-20px" type="checkbox" value="0"
-                                checked="checked" name="notifications" id="notificationSwitch" />
-                            <span class="form-check-label text-muted fs-7" id="statusText">Loading...</span>
-                        </label>
+                @if (auth()->check() &&
+                        auth()->user()->hasRole(['penghuni']))
+                    <div class="menu-item px-5">
+                        <span class="menu-link px-5">Status</span>
                     </div>
-                </div>
 
+
+                    <div class="menu-item px-5">
+                        <div class="menu-content px-5">
+                            <label class="form-check form-switch form-check-custom form-check-solid">
+                                <input class="form-check-input w-30px h-20px" type="checkbox" value="0"
+                                    checked="checked" name="notifications" id="notificationSwitch" />
+                                <span class="form-check-label text-muted fs-7" id="statusText">Loading...</span>
+                            </label>
+                        </div>
+                    </div>
+                @endif
                 <script>
                     // load dom element
                     document.addEventListener('DOMContentLoaded', function() {
