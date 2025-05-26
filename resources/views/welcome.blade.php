@@ -179,7 +179,7 @@
             </div>
             <!--end::Wrapper-->
             <!--begin::Curve bottom-->
-            <div class="landing-curve landing-dark-color mb-10 mb-lg-20">
+            <div class="landing-curve landing-dark-color mb-2 mb-lg-2">
                 <svg viewBox="15 12 1470 48" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path
                         d="M0 11C3.93573 11.3356 7.85984 11.6689 11.7725 12H1488.16C1492.1 11.6689 1496.04 11.3356 1500 11V12H1488.16C913.668 60.3476 586.282 60.6117 11.7725 12H0V11Z"
@@ -190,7 +190,7 @@
         </div>
 
         <!--begin::Testimonials Section-->
-        <div class="mt-20 mb-n20 position-relative z-index-2">
+        <div class="mt-5 mb-n20 position-relative z-index-2">
             <!--begin::Container-->
             <div class="container">
                 <!--begin::Heading-->
@@ -213,7 +213,7 @@
                             <div class="modal-body">
                                 <div class="row mb-5">
                                     <div class="col-md-4 fv-row">
-                                        <label class="fs-5 fw-semibold mb-2">Tujuan</label>
+                                        <label class="required fs-5 fw-semibold mb-2">Tujuan</label>
                                         <select class="form-select" name="user_id" id="user_id">
                                             <option selected disabled>- Pilih tujuan/pemilik rumah -</option>
                                             @foreach ($users as $user)
@@ -246,7 +246,7 @@
                                         <div class="invalid-feedback"> </div>
                                     </div>
                                     <div class="col-md-4 fv-row">
-                                        <label class="fs-5 fw-semibold mb-2">Jenis Kendaraan</label>
+                                        <label class="fs-5 fw-semibold mb-2 required">Jenis Kendaraan</label>
                                         <select class="form-select" name="vehicle_type" id="vehicle_type">
                                             <option selected disabled>- Pilih jenis kendaraan -</option>
                                             <option value="Mobil">Mobil</option>
@@ -255,7 +255,7 @@
                                         </select>
                                     </div>
                                     <div class="col-md-4 fv-row">
-                                        <label class="fs-5 fw-semibold mb-2">Nomor Plat Kendaraan</label>
+                                        <label class="fs-5 fw-semibold mb-2 required">Nomor Plat Kendaraan</label>
                                         <input type="text" class="form-control" placeholder="Plat kendaraan"
                                             name="vehicle_number" id="vehicle_number" />
                                         <div class="invalid-feedback"> </div>
@@ -263,7 +263,13 @@
                                 </div>
                                 <div class="row mb-5">
                                     <div class="col-md-4 fv-row">
-                                        <label class="fs-5 fw-semibold mb-2">Foto Tamu</label>
+                                        <label class="fs-5 fw-semibold mb-2 required">No. WA</label>
+                                        <input type="text" class="form-control" placeholder="Nomor WhatsApp"
+                                            name="phone_number" id="phone_number" />
+                                        <div class="invalid-feedback"> </div>
+                                    </div>
+                                    <div class="col-md-4 fv-row">
+                                        <label class="fs-5 fw-semibold mb-2 required">Foto Tamu</label>
                                         <input type="file" class="form-control" name="captured_image"
                                             id="captured_image" />
                                         <div class="invalid-feedback"> </div>
@@ -410,7 +416,7 @@
                     }
                 });
 
-                form.reset();
+                // form.reset();
                 toastr.success("Data Berhasil di simpan", "Success");
             } catch (error) {
                 console.error(error);
