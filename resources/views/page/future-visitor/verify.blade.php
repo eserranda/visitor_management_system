@@ -62,6 +62,10 @@
                         <div class="fs-5 text-muted fw-bold align-items-center text-center">
                             Tamu ini tidak terdaftar sebagai tamu anda
                         </div>
+                        <div class="my-2 d-flex justify-content-center gap-15">
+                            <a href="{{ url('/dashboard') }}" class="btn btn-success px-6 mt-3">Dashboard</a>
+                            <a href="#" class="btn btn-secondary px-6 mt-3" id="reload">Reload</a>
+                        </div>
                     </div>
                 @endif
             </div>
@@ -71,6 +75,10 @@
 
 
     <script>
+        document.getElementById('reload').addEventListener('click', function() {
+            location.reload();
+        });
+
         async function verify(status) {
             const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
             try {
