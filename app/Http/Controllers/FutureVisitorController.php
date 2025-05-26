@@ -83,38 +83,43 @@ class FutureVisitorController extends Controller
             $futureVisitor->check_in = Carbon::now('Asia/Makassar');
             $futureVisitor->save();
 
-            // ambil nama security yang sedang login
-            $security_name = Auth::user()->nickname;
-            // ambil data user 
-            $user = User::find($futureVisitor->user_id);
+            if ($request->status == 'approved') {
+                // ambil nama security yang sedang login
+                $security_name = Auth::user()->nickname;
+                // ambil data user 
+                $user = User::find($futureVisitor->user_id);
+                $uri = env('API_URL') . '/send-notification/guest-check-in';
+                try {
+                    Http::withHeaders([
+                        'Content-Type' => 'application/json',
+                        'Accept' => 'application/json',
+                    ])->post($uri, [
+                        'user_phone_number' => $user->phone_number,
+                        'user_name' => $user->nickname,
+                        'security_name' => $security_name,
+                        // Bodoata pengunjung
+                        'visitor_name' => $futureVisitor->visitor_name,
+                        'check_in' =>   Carbon::now()->format('d-m-Y H:i'),
+                    ]);
+                } catch (\Exception $e) {
+                    Log::error('Gagal kirim notifikasi: ' . $e->getMessage());
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Gagal mengirim notifikasi ke pengunjung' . $e->getMessage()
+                    ], 500);
+                }
 
-            $uri = env('API_URL') . '/send-notification/guest-check-in';
-
-            try {
-                Http::withHeaders([
-                    'Content-Type' => 'application/json',
-                    'Accept' => 'application/json',
-                ])->post($uri, [
-                    'user_phone_number' => $user->phone_number,
-                    'user_name' => $user->nickname,
-                    'security_name' => $security_name,
-                    // Bodoata pengunjung
-                    'visitor_name' => $futureVisitor->visitor_name,
-                    'check_in' =>   Carbon::now()->format('d-m-Y H:i'),
-                ]);
-            } catch (\Exception $e) {
-                Log::error('Gagal kirim notifikasi: ' . $e->getMessage());
                 return response()->json([
-                    'success' => false,
-                    'message' => 'Gagal mengirim notifikasi ke pengunjung' . $e->getMessage()
-                ], 500);
+                    'success' => true,
+                    'message' => 'Status berhasil diperbarui'
+                ], 200);
+            } else {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Status berhasil diperbarui'
+                ], 200);
             }
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Status berhasil diperbarui'
-            ], 200);
-        } else {
+        } else if ($request->status == 'completed') {
             return response()->json([
                 'success' => false,
                 'message' => 'Data tidak ditemukan'
@@ -143,7 +148,17 @@ class FutureVisitorController extends Controller
     {
         $futureVisitor = FutureVisitor::find($id);
 
-        $checkIn = Carbon::parse($futureVisitor->check_in)->format('d-m-Y H:i T');
+        if ($futureVisitor->verify_status == 'verified') {
+            $futureVisitor->verify_status = 'Terverifikasi';
+        } else if ($futureVisitor->verify_status == 'rejected') {
+            $futureVisitor->verify_status = 'Ditolak';
+        } else if ($futureVisitor->verify_status == 'pending') {
+            $futureVisitor->verify_status = 'Belum Diverifikasi';
+        } else {
+            $futureVisitor->verify_status = 'Unknown';
+        }
+
+        // $checkIn = Carbon::parse($futureVisitor->check_in)->format('d-m-Y H:i T');
         return response()->json([
             'id' => $futureVisitor->id,
             'visitor_name' => $futureVisitor->visitor_name,
@@ -154,6 +169,7 @@ class FutureVisitorController extends Controller
             'vehicle_number' => $futureVisitor->vehicle_number,
             'vehicle_type' => $futureVisitor->vehicle_type,
             'status' => $futureVisitor->status ? $futureVisitor->status : '-',
+            'verify_status' => $futureVisitor->verify_status ? $futureVisitor->verify_status : '-',
             'check_in' => $futureVisitor->check_in ? Carbon::parse($futureVisitor->check_in)->setTimezone('Asia/Makassar')->format('d-m-Y H:i T') : '-',
             'check_out' => $futureVisitor->check_out ? Carbon::parse($futureVisitor->check_out)->format('d-m-Y H:i') : '-',
             'created_at' => Carbon::parse($futureVisitor->created_at)->format('d-m-Y H:i'),
@@ -169,7 +185,19 @@ class FutureVisitorController extends Controller
         // jika user yang login adalah security, admin, atau super_admin maka tampilkan semua data
         $user = Auth::user();
         if ($user->hasRole(['security', 'admin', 'super_admin'])) {
-            $futureVisitors = FutureVisitor::latest('created_at')->get();
+            if ($filter) {
+                if ($filter == 'pending') {
+                    $futureVisitors =  FutureVisitor::where('status', 'pending')->latest('created_at')->get();
+                } else if ($filter == 'approved') {
+                    $futureVisitors =  FutureVisitor::where('status', 'approved')->latest('created_at')->get();
+                } else if ($filter == 'rejected') {
+                    $futureVisitors =  FutureVisitor::where('status', 'rejected')->latest('created_at')->get();
+                } else if ($filter == 'completed') {
+                    $futureVisitors =  FutureVisitor::where('status', 'completed')->latest('created_at')->get();
+                }
+            } else {
+                $futureVisitors = FutureVisitor::latest('created_at')->get();
+            }
         } else {
             $user_id = Auth::user()->id;
             if ($filter) {
@@ -179,8 +207,8 @@ class FutureVisitorController extends Controller
                     $futureVisitors =  FutureVisitor::where('user_id', $user_id)->where('status', 'approved')->latest('created_at')->get();
                 } else if ($filter == 'rejected') {
                     $futureVisitors =  FutureVisitor::where('user_id', $user_id)->where('status', 'rejected')->latest('created_at')->get();
-                } else if ($filter == 'canceled') {
-                    $futureVisitors =  FutureVisitor::where('user_id', $user_id)->where('status', 'canceled')->latest('created_at')->get();
+                } else if ($filter == 'completed') {
+                    $futureVisitors =  FutureVisitor::where('user_id', $user_id)->where('status', 'completed')->latest('created_at')->get();
                 }
             } else {
                 $futureVisitors = FutureVisitor::where('user_id', $user_id)->latest('created_at')->get();
@@ -202,7 +230,7 @@ class FutureVisitorController extends Controller
                 } else if ($futureVisitor->verify_status == "rejected") {
                     return '<span class="badge bg-danger">Ditolak</span>';
                 } else if ($futureVisitor->verify_status == "pending") {
-                    return '<span class="badge bg-warning">Pending</span>';
+                    return '<span class="badge bg-warning">Belum Diverifikasi</span>';
                 }
                 return '<span class="badge bg-secondary">Unknown</span>';
             })
@@ -210,7 +238,9 @@ class FutureVisitorController extends Controller
                 if ($futureVisitor->status == "pending") {
                     return '<span class="badge bg-warning">Pending</span>';
                 } elseif ($futureVisitor->status == "approved") {
-                    return '<span class="badge bg-success">Approved</span>';
+                    return '<span class="badge bg-secondary">Sedang Berkunjung</span>';
+                } elseif ($futureVisitor->status == "completed") {
+                    return '<span class="badge bg-success">Selesai</span>';
                 } elseif ($futureVisitor->status == "rejected") {
                     return '<span class="badge bg-danger">Rejected</span>';
                 }
@@ -228,7 +258,8 @@ class FutureVisitorController extends Controller
                     $btn .= '<a href="#" class="btn btn-sm btn-icon btn-warning mx-2" onclick="rejected(' . $row->id . ')"><i class="bi bi-exclamation-diamond"></i></a>';
                     $btn .= '<a href="#" class="btn btn-sm btn-icon btn-danger" onclick="hapus(' . $row->id . ')"><i class="bi bi-trash"></i></a>';
                 } else if (auth()->user()->hasRole('security')) {
-                    $btn = '<a href="#" class="btn btn-sm btn-icon btn-info" onclick="detail(' . $row->id . ')"><i class="bi bi-eye-fill fs-4"></i></a>';
+                    $btn = '<a href="#" class="btn btn-sm btn-icon btn-info mx-2" onclick="detail(' . $row->id . ')"><i class="bi bi-eye-fill fs-4"></i></a>';
+                    $btn .= '<a href="#" class="btn btn-sm btn-icon btn-success" onclick="updateStatus(' . $row->id . ', \'completed\')"><i class="bi bi-check2-circle fs-4"></i></a>';
                 } else if (auth()->user()->hasRole(['admin', 'super_admin'])) {
                     $btn = '<a href="#" class="btn btn-sm btn-icon btn-info" onclick="detail(' . $row->id . ')"><i class="bi bi-eye-fill fs-4"></i></a>';
                     $btn .= '<a href="#" class="btn btn-sm btn-icon btn-warning mx-2" onclick="rejected(' . $row->id . ')"><i class="bi bi-exclamation-diamond"></i></a>';

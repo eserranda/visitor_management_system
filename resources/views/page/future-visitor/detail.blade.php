@@ -71,13 +71,12 @@
                                 </div>
 
                                 <div class="row mb-7">
-                                    <label class="col-lg-4 fw-semibold text-muted px-7">Status</label>
+                                    <label class="col-lg-4 fw-semibold text-muted px-7">Status Verifikasi Pemilik
+                                        Rumah</label>
                                     <div class="col-lg-8">
-                                        <span class="fw-bold fs-6 text-gray-800" id="detail_status"></span>
+                                        <span class="fw-bold fs-6 text-gray-800" id="detail_verify_status"></span>
                                     </div>
                                 </div>
-
-
 
                             </div>
                         </div>

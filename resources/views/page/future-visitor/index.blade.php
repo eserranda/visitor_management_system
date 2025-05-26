@@ -24,8 +24,8 @@
                                 <select class="form-select form-select-solid" data-hide-search="true" id="filterData">
                                     <option value="" selected disabled>Filter</option>
                                     <option value="pending">Akan Berkunjung</option>
-                                    <option value="cancelled">Batal Berkunjung</option>
-                                    <option value="approved">Selesai</option>
+                                    <option value="approved">Sedang Berkunjung</option>
+                                    <option value="completed">Selesai</option>
                                     <option value="all">Semua</option>
                                 </select>
                             </div>
@@ -150,7 +150,8 @@
                         document.getElementById('detail_vehicle_number').innerHTML = data.vehicle_number;
                         document.getElementById('detail_estimated_arrival_time').innerHTML = data
                             .estimated_arrival_time;
-                        document.getElementById('detail_status').innerHTML = data.status;
+                        // document.getElementById('detail_status').innerHTML = data.status;
+                        document.getElementById('detail_verify_status').innerHTML = data.verify_status;
                         document.getElementById('detail_check_in').innerHTML = data.check_in;
                         document.getElementById('detail_check_out').innerHTML = data.check_out;
 
@@ -163,6 +164,38 @@
                     })
                     .catch(error => console.error(error));
                 $('#detailModal').modal('show');
+            }
+
+            async function updateStatus(id, status) {
+                try {
+                    const response = await fetch(`/future-visitors/update-status/${id}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({
+                            status
+                        })
+                    });
+
+                    // Pastikan HTTP response sukses  
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+
+                    const data = await response.json();
+
+                    if (!data.success) {
+                        toastr.error(data.message);
+                    } else {
+                        toastr.success(data.message);
+                        $('#datatable').DataTable().ajax.reload();
+                    }
+                } catch (error) {
+                    console.error(error);
+                    toastr.error('Terjadi kesalahan saat memproses permintaan');
+                }
             }
 
             async function rejected(id) {
@@ -254,14 +287,11 @@
                         if (value == 'pending') {
                             datatable.ajax.url("{{ route('future-visitors.data') }}?filter=pending")
                                 .load();
-                        } else if (value == 'cancelled') {
-                            datatable.ajax.url("{{ route('future-visitors.data') }}?filter=cancelled")
-                                .load();
                         } else if (value == 'approved') {
                             datatable.ajax.url("{{ route('future-visitors.data') }}?filter=approved")
                                 .load();
-                        } else if (value == 'rejected') {
-                            datatable.ajax.url("{{ route('future-visitors.data') }}?filter=rejected")
+                        } else if (value == 'completed') {
+                            datatable.ajax.url("{{ route('future-visitors.data') }}?filter=completed")
                                 .load();
                         } else {
                             datatable.ajax.url("{{ route('future-visitors.data') }}").load();
