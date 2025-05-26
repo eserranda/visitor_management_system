@@ -358,7 +358,7 @@
                         });
 
                         form.reset();
-                        hapus disable pada tombol submit
+                        // hapus disable pada tombol submit
                         submitButton.removeAttribute('disabled');
 
                         toastr.success("Data Berhasil di simpan", "Success");
