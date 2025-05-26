@@ -74,10 +74,20 @@ class FutureVisitorController extends Controller
     {
         // format $id ke integer
         $id = (int)$id;
-        // gunakan Carbon untuk mendapatkan waktu saat berdasarkan timezone
-        // $timeNow = Carbon::now('Asia/Makassar');
-        // dd($timeNow);
+
         $futureVisitor = FutureVisitor::find($id);
+        if ($futureVisitor->verify_status == 'pending') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Tamu belum diverifikasi oleh pemilik rumah'
+            ], 400);
+        } else if ($futureVisitor->verify_status == 'rejected') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Tamu sudah ditolak oleh pemilik rumah'
+            ], 400);
+        }
+
         if ($futureVisitor) {
             $futureVisitor->status = $request->status;
             $futureVisitor->check_in = Carbon::now('Asia/Makassar');

@@ -230,7 +230,7 @@
                     Swal.fire({
                         icon: 'error',
                         title: 'Gagal',
-                        text: 'Something went wrong!',
+                        text: data.message || 'Something went wrong!',
                     });
                 }
             } catch (error) {
