@@ -416,7 +416,7 @@
                     }
                 });
 
-                // form.reset();
+                form.reset();
                 toastr.success("Data Berhasil di simpan", "Success");
             } catch (error) {
                 console.error(error);
