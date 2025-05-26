@@ -199,6 +199,22 @@
             }
 
             async function rejected(id) {
+                Swal.fire({
+                    title: 'Apakah Anda yakin?',
+                    text: "Tamu akan ditolak!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya, Tolak!',
+                    cancelButtonText: 'Batal',
+                    reverseButtons: true
+                }).then(async (result) => {
+                    if (result.isConfirmed) {
+                        await updateStatusRequest(id);
+                    }
+                });
+            }
+
+            async function updateStatusRequest(id) {
                 const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
                 try {
                     const response = await fetch('/future-visitors/visitor-verification/' + id, {
