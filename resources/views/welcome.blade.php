@@ -263,8 +263,8 @@
                                 </div>
                                 <div class="row mb-5">
                                     <div class="col-md-4 fv-row">
-                                        <label class="fs-5 fw-semibold mb-2 required">No. WA</label>
-                                        <input type="text" class="form-control" placeholder="Nomor WhatsApp"
+                                        <label class="fs-5 fw-semibold mb-2 required">No. Telp</label>
+                                        <input type="text" class="form-control" placeholder="Nomor Telepon"
                                             name="phone_number" id="phone_number" />
                                         <div class="invalid-feedback"> </div>
                                     </div>

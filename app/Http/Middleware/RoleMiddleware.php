@@ -25,7 +25,7 @@ class RoleMiddleware
         }
 
         // Lanjutkan request jika valid
-        // return $next($request);
-        return $next("/dashboard");
+        return $next($request);
+        // return $next("/dashboard");
     }
 }

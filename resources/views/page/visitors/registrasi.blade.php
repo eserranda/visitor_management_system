@@ -288,8 +288,8 @@
                     event.preventDefault();
 
                     // disable the submit button
-                    const submitButton = event.target.querySelector('[type="submit"]');
-                    submitButton.setAttribute('disabled', 'disabled');
+                    // const submitButton = event.target.querySelector('[type="submit"]');
+                    // submitButton.setAttribute('disabled', 'disabled');
 
                     const form = event.target;
                     const formData = new FormData(form);
@@ -357,9 +357,9 @@
                             }
                         });
 
-                        form.reset();
+                        // form.reset();
                         // hapus disable pada tombol submit
-                        submitButton.removeAttribute('disabled');
+                        // submitButton.removeAttribute('disabled');
 
 
                         toastr.success("Data Berhasil di simpan", "Success");

@@ -60,8 +60,10 @@
                             </div>
                         </div>
                         <div class="card-body pt-2 pb-4 d-flex align-items-center">
-                            <a href="/future-visitors" class="fw-bold me-2 fs-4">Lihat Data</a>
-
+                            @if (auth()->check() &&
+                                    auth()->user()->hasRole(['security', 'super_admin']))
+                                <a href="/future-visitors" class="fw-bold me-2 fs-4">Lihat Data</a>
+                            @endif
                         </div>
                     </div>
                 </div>

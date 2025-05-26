@@ -39,9 +39,12 @@
                             </button>
 
                             {{-- <a href="/address/create" class="btn btn-primary">Add Data</a> --}}
-                            <button type="button" class="btn btn-primary" onclick="add()">
-                                Add Data
-                            </button>
+                            @if (auth()->check() &&
+                                    auth()->user()->hasRole(['super_admin', 'admin']))
+                                <button type="button" class="btn btn-primary" onclick="add()">
+                                    Add Data
+                                </button>
+                            @endif
 
                             <div id="export_menu"
                                 class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-150px py-4"

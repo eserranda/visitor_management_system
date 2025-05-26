@@ -103,9 +103,12 @@ class AddressController extends Controller
                 return  'Blok ' . $address->block_number . ' No. ' . $address->house_number;
             })
             ->addColumn('action', function ($row) {
-                $btn = '<a href="#" class="btn btn-sm btn-icon btn-info me-2" onclick="edit(' . $row->id . ')"><i class="bi bi-pencil fs-4"></i></a>';
-                $btn .= '<a href="#" class="btn btn-sm btn-icon btn-danger" onclick="hapus(' . $row->id . ')"><i class="bi bi-trash"></i></a>';
-                return $btn;
+                // cek role user
+                if (auth()->user()->hasRole(['super_admin', 'penghuni'])) {
+                    $btn = '<a href="#" class="btn btn-sm btn-icon btn-info me-2" onclick="edit(' . $row->id . ')"><i class="bi bi-pencil fs-4"></i></a>';
+                    $btn .= '<a href="#" class="btn btn-sm btn-icon btn-danger" onclick="hapus(' . $row->id . ')"><i class="bi bi-trash"></i></a>';
+                    return $btn;
+                }
             })
             ->rawColumns(['action'])
             ->make(true);

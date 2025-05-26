@@ -85,6 +85,7 @@
                                     <th>Blok</th>
                                     <th>Estimasi Kunjungan</th>
                                     <th>No. Plat Kendaraan</th>
+                                    <th>Verifikasi</th>
                                     <th>Status</th>
                                     <th>Actions</th>
                                 </tr>
@@ -164,6 +165,48 @@
                 $('#detailModal').modal('show');
             }
 
+            async function rejected(id) {
+                const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+                try {
+                    const response = await fetch('/future-visitors/visitor-verification/' + id, {
+                        method: 'PUT',
+                        headers: {
+                            'Accept': 'application/json',
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken
+                        },
+                        body: JSON.stringify({
+                            status: 0
+                        }),
+                    });
+
+                    const data = await response.json();
+                    console.log(data);
+                    if (data.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil',
+                            text: 'Tamu berhasil ditolak!',
+                        });
+                        // reload datatable
+                        $('#datatable').DataTable().ajax.reload();
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Gagal',
+                            text: data.message || 'Something went wrong!',
+                        });
+                    }
+                } catch (error) {
+                    console.error(error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal',
+                        text: 'Terjadi kesalahan saat memverifikasi tamu.',
+                    });
+                }
+            }
+
             var KTDatatablesExample = function() {
                 // Variabel untuk menyimpan referensi tabel
                 var table;
@@ -209,13 +252,17 @@
                     $('#filterData').on('change', function() {
                         var value = $(this).val();
                         if (value == 'pending') {
-                            datatable.ajax.url("{{ route('future-visitors.data') }}?filter=pending").load();
+                            datatable.ajax.url("{{ route('future-visitors.data') }}?filter=pending")
+                                .load();
                         } else if (value == 'cancelled') {
-                            datatable.ajax.url("{{ route('future-visitors.data') }}?filter=cancelled").load();
+                            datatable.ajax.url("{{ route('future-visitors.data') }}?filter=cancelled")
+                                .load();
                         } else if (value == 'approved') {
-                            datatable.ajax.url("{{ route('future-visitors.data') }}?filter=approved").load();
+                            datatable.ajax.url("{{ route('future-visitors.data') }}?filter=approved")
+                                .load();
                         } else if (value == 'rejected') {
-                            datatable.ajax.url("{{ route('future-visitors.data') }}?filter=rejected").load();
+                            datatable.ajax.url("{{ route('future-visitors.data') }}?filter=rejected")
+                                .load();
                         } else {
                             datatable.ajax.url("{{ route('future-visitors.data') }}").load();
                         }
@@ -288,6 +335,10 @@
                                 {
                                     data: 'vehicle_number',
                                     name: 'vehicle_number'
+                                },
+                                {
+                                    data: 'verify_status',
+                                    name: 'verify_status',
                                 },
                                 {
                                     data: 'status',

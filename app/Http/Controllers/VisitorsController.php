@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Companies;
-use App\Models\Visitors;
 use Carbon\Carbon;
+use App\Models\User;
+use App\Models\Visitors;
+use App\Models\Companies;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Validator;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Validator;
 
 class VisitorsController extends Controller
 {
@@ -206,6 +209,40 @@ class VisitorsController extends Controller
             'img_url' => $photoPath,
         ]);
 
+        $security_name = auth()->user()->nickname;
+        $user = User::find($request->user_id);
+        $company = Companies::find($request->company_id);
+
+        $companyName = $company ? $company->name : ' - ';
+
+        // $apiUri = env('API_URL');
+        $uri = env('API_URL') . '/send-notification/guest';
+
+        try {
+            Http::withHeaders([
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
+            ])->post($uri, [
+                'user_phone_number' => $user->phone_number,
+                'user_name' => $user->nickname,
+                'security_name' => $security_name,
+                // Bodoata pengunjung
+                'visitor_name' => $request->name,
+                'visitor_type' => $request->visitor_type,
+                'company_name' => $companyName,
+                'vehicle_number' => $request->vehicle_number,
+                'purpose' => $request->purpose,
+                'check_in' =>   Carbon::now()->format('d-m-Y H:i:s'),
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Gagal kirim notifikasi: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal mengirim notifikasi ke pengunjung' . $e->getMessage()
+            ], 500);
+        }
+
+
         if (!$visitor) {
             return response()->json([
                 'success' => false,
@@ -237,25 +274,6 @@ class VisitorsController extends Controller
         ]);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Visitors $visitors)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Visitors $visitors)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, $id)
     {
         $visitor = Visitors::find($id);

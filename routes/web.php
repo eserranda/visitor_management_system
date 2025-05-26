@@ -61,6 +61,8 @@ Route::prefix('future-visitors')->controller(FutureVisitorController::class)->gr
     Route::get('/data', 'getAllDataTable')->name('future-visitors.data')->middleware('auth');
     Route::get('/findById/{id}', 'findById')->middleware('auth');
     Route::put('/update/{id}', 'update')->middleware('auth');
+    Route::get('/verify/{id_user}/{id_visitor}', 'verify')->middleware('auth');
+    Route::put('/visitor-verification/{id_visitor}', 'updateVerifyStatus')->middleware('auth');
     Route::get('/detail/{id}', 'detail')->middleware('auth');
     Route::delete('/destroy/{id}', 'destroy')->middleware('auth');
     Route::post('/update-status/{id}', 'updateStatus')->middleware('auth');
