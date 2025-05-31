@@ -265,7 +265,7 @@ class FutureVisitorController extends Controller
             ->addColumn('action', function ($row) {
                 if (auth()->user()->hasRole('penghuni')) {
                     $btn = '<a href="#" class="btn btn-sm btn-icon btn-info" onclick="detail(' . $row->id . ')"><i class="bi bi-eye-fill fs-4"></i></a>';
-                    $btn .= '<a href="#" class="btn btn-sm btn-icon btn-warning mx-2" onclick="rejected(' . $row->id . ')"><i class="bi bi-exclamation-diamond"></i></a>';
+                    $btn .= '<a href="#" class="btn btn-sm btn-icon btn-warning mx-2" title="Tolak Tamu" onclick="rejected(' . $row->id . ')"><i class="bi bi-exclamation-diamond"></i></a>';
                     $btn .= '<a href="#" class="btn btn-sm btn-icon btn-danger" onclick="hapus(' . $row->id . ')"><i class="bi bi-trash"></i></a>';
                 } else if (auth()->user()->hasRole('security')) {
                     $btn = '<a href="#" class="btn btn-sm btn-icon btn-info mx-2" onclick="detail(' . $row->id . ')"><i class="bi bi-eye-fill fs-4"></i></a>';
@@ -427,7 +427,7 @@ class FutureVisitorController extends Controller
         }
 
         // cek apakah user memiliki role penghuni
-        if (Auth::user()->hasRole(['penghuni', 'admin', 'super_admin'])) {
+        if (Auth::user()->hasRole('penghuni')) {
             $user_id = Auth::user()->id;
             $address_id = Address::where('user_id', $user_id)->first()->id;
             $futureVisitor = FutureVisitor::create([

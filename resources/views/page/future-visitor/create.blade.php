@@ -118,7 +118,7 @@
                     Swal.fire({
                         icon: 'error',
                         title: 'Gagal',
-                        text: 'Something went wrong!',
+                        text: data.messages
                     });
 
                     return;
