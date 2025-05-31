@@ -16,7 +16,17 @@ class DashboardController extends Controller
             $query->where('name', 'penghuni');
         })->get();
 
-        return view('welcome', compact('users'));
+        // ambil data alamat untuk dropdown
+        $addresses = Address::all();
+        $users->each(function ($user) use ($addresses) {
+            $user->address = $addresses->where('id', $user->address_id)->first();
+        });
+
+        // dd($users->toArray());
+        return view('welcome', compact('users', 'addresses'));
+        // return view('page.dashboard.welcome', compact('users'));
+
+        // return view('welcome', compact('users'));
     }
 
     public function index()

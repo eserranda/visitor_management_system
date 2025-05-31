@@ -216,9 +216,17 @@
                                         <label class="required fs-5 fw-semibold mb-2">Tujuan</label>
                                         <select class="form-select" name="user_id" id="user_id">
                                             <option selected disabled>- Pilih tujuan/pemilik rumah -</option>
-                                            @foreach ($users as $user)
-                                                <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                            @foreach ($addresses as $address)
+                                                <option value="{{ $address->user_id }}">
+                                                    {{ $address->user->name }} -
+                                                    Blok {{ $address->block_number }} No.
+                                                    {{ $address->house_number }}
+                                                </option>
                                             @endforeach
+                                            {{-- @foreach ($users as $user)
+                                                <option value="{{ $user->id }}">{{ $user->name }} -
+                                                    {{ $user->block_number }}</option>
+                                            @endforeach --}}
 
                                             <div class="invalid-feedback"> </div>
                                         </select>
