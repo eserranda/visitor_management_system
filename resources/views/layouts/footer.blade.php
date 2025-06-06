@@ -138,6 +138,8 @@
             form.reset();
             toastr.success("Status Berhasil diperbaharui", "Success");
             document.querySelector('[data-bs-dismiss="modal"]').click();
+            // reload halaman
+            location.reload();
 
         } catch (error) {
             console.error(error);

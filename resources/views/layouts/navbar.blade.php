@@ -104,6 +104,11 @@
                             </label>
                         </div>
                     </div>
+
+                    <div class="menu-item px-5">
+                        <span class="menu-link px-5 mb-0">Message :</span>
+                        <span class="text-muted fw-semibold fs-7" id="messageText"></span>
+                    </div>
                 @endif
                 <script>
                     // load dom element
@@ -114,16 +119,24 @@
                         // Ambil status user dari backend
                         @if (auth()->check())
                             const statusUser = "{{ auth()->user()->status }}";
+                            const messageText = document.getElementById('messageText');
+                            messageText.textContent = "{{ auth()->user()->information }}";
                         @else
                             const statusUser = "";
+                            const messageText = document.getElementById('messageText');
+                            messageText.textContent = "";
                         @endif
 
                         if (statusUser === 'in_house') {
                             switchElement.checked = true;
                             statusText.textContent = 'Berada Di Rumah';
+                            const messageText = document.getElementById('messageText');
+                            messageText.textContent = "";
                         } else {
                             switchElement.checked = false;
                             statusText.textContent = 'Berada Di Luar';
+                            const messageText = document.getElementById('messageText');
+                            messageText.textContent = "{{ auth()->user()->information }}";
                         }
 
                         // munculkan alert saat switch diubah
@@ -134,7 +147,7 @@
 
                                 $('#messageModal').modal('show');
                             } else {
-                                localStorage.setItem('notificationStatus', 'in_house');
+                                // localStorage.setItem('notificationStatus', 'in_house');
                                 statusText.textContent = 'Berada Di Rumah';
 
                                 const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
@@ -155,6 +168,8 @@
                                             console.log(data);
                                             if (data.success) {
                                                 toastr.success("Status Berhasil diperbaharui", "Success");
+                                                // reload halaman
+                                                location.reload();
                                             } else {
                                                 toastr.error("Status gagal diperbaharui", "Error");
                                             }
