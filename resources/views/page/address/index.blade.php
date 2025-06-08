@@ -3,7 +3,7 @@
     <link href="{{ asset('assets') }}/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
 
     @section('title')
-        Data Users
+        Data Alamat Penghuni
     @endsection
 
     @section('content')
@@ -81,7 +81,7 @@
                                     <th>Pemilik Rumah</th>
                                     <th>Blok/Nomor Rumah</th>
                                     <th>Jalan</th>
-                                    <th>Keterangan</th>
+                                    {{-- <th>Keterangan</th> --}}
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -287,11 +287,11 @@
                                     name: 'street_name',
                                     orderable: true,
                                 },
-                                {
-                                    data: 'additional_info',
-                                    name: 'additional_info',
-                                    orderable: true,
-                                },
+                                // {
+                                //     data: 'additional_info',
+                                //     name: 'additional_info',
+                                //     orderable: true,
+                                // },
                                 {
                                     data: 'action',
                                     name: 'action',

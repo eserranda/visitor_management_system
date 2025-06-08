@@ -91,13 +91,13 @@ class AddressController extends Controller
                     return $address->street_name;
                 }
             })
-            ->editColumn('additional_info', function ($address) {
-                if ($address->additional_info == null) {
-                    return '-';
-                } else {
-                    return $address->additional_info;
-                }
-            })
+            // ->editColumn('additional_info', function ($address) {
+            //     if ($address->user->information != null) {
+            //         return $address->user->information;
+            //     } else {
+            //         return '-';
+            //     }
+            // })
 
             ->addColumn('block_and_number', function ($address) {
                 return  'Blok ' . $address->block_number . ' No. ' . $address->house_number;

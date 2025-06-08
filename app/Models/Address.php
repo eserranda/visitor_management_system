@@ -11,7 +11,7 @@ class Address extends Model
         'block_number',
         'house_number',
         'street_name',
-        'adiitional_info',
+        'additional_info',
     ];
 
     public function user()
