@@ -101,12 +101,9 @@
                         icon: 'success',
                         title: 'Berhasil',
                         text: 'Tamu berhasil diverifikasi!',
-                    });
-
-                    // Redirect to the dashboard after a short delay
-                    setTimeout(() => {
+                    }).then(() => {
                         window.location.href = '/future-visitors';
-                    }, 2000);
+                    });
                 } else {
                     Swal.fire({
                         icon: 'error',
