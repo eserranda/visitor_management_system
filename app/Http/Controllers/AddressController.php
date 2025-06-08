@@ -30,7 +30,11 @@ class AddressController extends Controller
         }
 
         // Ambil semua user untuk dropdown
-        $users = User::select('id', 'name', 'nickname')->get();
+        $users = User::whereHas('roles', function ($query) {
+            $query->where('name', 'penghuni');
+        })
+            ->select('id', 'name', 'nickname')
+            ->get();
 
         return response()->json([
             'address' => $address,
@@ -104,7 +108,7 @@ class AddressController extends Controller
             })
             ->addColumn('action', function ($row) {
                 // cek role user
-                if (auth()->user()->hasRole(['super_admin', 'penghuni'])) {
+                if (auth()->user()->hasRole(['super_admin', 'admin', 'penghuni'])) {
                     $btn = '<a href="#" class="btn btn-sm btn-icon btn-info me-2" onclick="edit(' . $row->id . ')"><i class="bi bi-pencil fs-4"></i></a>';
                     $btn .= '<a href="#" class="btn btn-sm btn-icon btn-danger" onclick="hapus(' . $row->id . ')"><i class="bi bi-trash"></i></a>';
                     return $btn;
@@ -174,25 +178,7 @@ class AddressController extends Controller
         ], 200);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Address $address)
-    {
-        //
-    }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Address $address)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, $id)
     {
         $address = Address::find($id);
