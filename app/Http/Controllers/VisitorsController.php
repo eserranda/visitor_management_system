@@ -232,7 +232,7 @@ class VisitorsController extends Controller
                 'company_name' => $companyName,
                 'vehicle_number' => $request->vehicle_number,
                 'purpose' => $request->purpose,
-                'check_in' =>   Carbon::now()->format('d-m-Y H:i:s'),
+                'check_in' =>   Carbon::now()->format('d-m-Y H:i T'),
             ]);
         } catch (\Exception $e) {
             Log::error('Gagal kirim notifikasi: ' . $e->getMessage());
