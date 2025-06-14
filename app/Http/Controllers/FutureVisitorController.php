@@ -363,10 +363,10 @@ class FutureVisitorController extends Controller
             ]);
         } catch (\Exception $e) {
             Log::error('Gagal kirim notifikasi: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => 'Gagal mengirim notifikasi ke pengunjung' . $e->getMessage()
-            ], 500);
+            // return response()->json([
+            //     'success' => false,
+            //     'message' => 'Gagal mengirim notifikasi ke pengunjung' . $e->getMessage()
+            // ], 500);
         }
 
 
