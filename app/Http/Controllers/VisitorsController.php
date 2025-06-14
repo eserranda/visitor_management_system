@@ -217,7 +217,6 @@ class VisitorsController extends Controller
 
         // $apiUri = env('API_URL');
         $uri = env('API_URL') . '/send-notification/guest';
-
         try {
             Http::withHeaders([
                 'Content-Type' => 'application/json',
@@ -236,10 +235,10 @@ class VisitorsController extends Controller
             ]);
         } catch (\Exception $e) {
             Log::error('Gagal kirim notifikasi: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => 'Gagal mengirim notifikasi ke pengunjung' . $e->getMessage()
-            ], 500);
+            // return response()->json([
+            //     'success' => false,
+            //     'message' => 'Gagal mengirim notifikasi ke pengunjung' . $e->getMessage()
+            // ], 500);
         }
 
 

@@ -94,9 +94,7 @@ class FutureVisitorController extends Controller
             $futureVisitor->save();
 
             if ($request->status == 'approved') {
-                // ambil nama security yang sedang login
                 $security_name = Auth::user()->nickname;
-                // ambil data user 
                 $user = User::find($futureVisitor->user_id);
                 $uri = env('API_URL') . '/send-notification/guest-check-in';
                 try {
@@ -113,10 +111,10 @@ class FutureVisitorController extends Controller
                     ]);
                 } catch (\Exception $e) {
                     Log::error('Gagal kirim notifikasi: ' . $e->getMessage());
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'Gagal mengirim notifikasi ke pengunjung' . $e->getMessage()
-                    ], 500);
+                    // return response()->json([
+                    //     'success' => false,
+                    //     'message' => 'Gagal mengirim notifikasi ke pengunjung' . $e->getMessage()
+                    // ], 500);
                 }
 
                 return response()->json([

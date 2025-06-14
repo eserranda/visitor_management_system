@@ -32,7 +32,9 @@ class DashboardController extends Controller
     public function index()
     {
         $userId = auth()->user()->id;
+        $totalVisitorsUserActive = FutureVisitor::where('status', 'approved')->count();
         $totalVisitorsActive = Visitors::where('status', 'visiting')->count();
+        $totalVisitorsActive += $totalVisitorsUserActive;
         $totalVisitor = Visitors::where('status', 'completed')->count();
         $futureVisitors = FutureVisitor::where('status', 'pending')->count();
         $totalHouse = Address::count();
