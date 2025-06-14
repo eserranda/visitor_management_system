@@ -288,7 +288,11 @@
                             <div class="modal-footer">
                                 {{-- <button type="button" class="btn btn-light mx-3"
                                     data-bs-dismiss="modal">Close</button> --}}
-                                <button type="submit" class="btn btn-primary">Save</button>
+                                <button type="submit" id="submitBtn" class="btn btn-primary">
+                                    <span id="btnText">Simpan</span>
+                                    <span id="btnSpinner" class="spinner-border spinner-border-sm d-none"
+                                        role="status" aria-hidden="true"></span>
+                                </button>
                             </div>
                         </form>
                     </div>
@@ -365,8 +369,17 @@
             event.preventDefault();
 
             const form = event.target;
-            const formData = new FormData(form);
+            const submitBtn = document.getElementById('submitBtn');
+            const btnText = document.getElementById('btnText');
+            const btnSpinner = document.getElementById('btnSpinner');
+            const originalText = btnText.textContent;
 
+            // 1. Disable tombol & tampilkan spinner
+            submitBtn.disabled = true;
+            btnText.classList.add('d-none');
+            btnSpinner.classList.remove('d-none');
+
+            const formData = new FormData(form);
             const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
 
             try {
@@ -428,6 +441,17 @@
                 toastr.success("Data Berhasil di simpan", "Success");
             } catch (error) {
                 console.error(error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal',
+                    text: 'Something went wrong!',
+                });
+            } finally {
+                // 2. Aktifkan kembali tombol & sembunyikan spinner
+                submitBtn.disabled = false;
+                btnText.classList.remove('d-none');
+                btnSpinner.classList.add('d-none');
+                btnText.textContent = originalText; // Kembalikan teks tombol ke semula
             }
         });
     </script>
