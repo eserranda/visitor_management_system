@@ -191,15 +191,18 @@
                                     <i class="ki-outline ki-arrow-left fs-4 me-1"></i>Back</button>
                             </div>
                             <div>
-                                <button type="submit" class="btn btn-lg btn-primary me-3"
+                                <button type="submit" id="submitBtn" class="btn btn-lg btn-primary me-3"
                                     data-kt-stepper-action="submit">
-                                    <span class="indicator-label">
+                                    <span class="indicator-label" id="btnText">
                                         Simpan
                                     </span>
-                                    <span class="indicator-progress">Please wait...
+                                    <span id="btnSpinner" class="spinner-border spinner-border-sm d-none" role="status"
+                                        aria-hidden="true">
+                                    </span>
+                                    {{-- <span class="indicator-progress">Please wait...
                                         <span class="spinner-border spinner-border-sm align-middle ms-2">
                                         </span>
-                                    </span>
+                                    </span> --}}
                                 </button>
                                 <button type="button" class="btn btn-lg btn-primary"
                                     data-kt-stepper-action="next">Continue
@@ -287,13 +290,22 @@
                 document.getElementById('addForm').addEventListener('submit', async (event) => {
                     event.preventDefault();
 
-                    // disable the submit button
-                    const submitButton = event.target.querySelector('[type="submit"]');
-                    submitButton.setAttribute('disabled', 'disabled');
+                    // // disable the submit button
+                    // const submitButton = event.target.querySelector('[type="submit"]');
+                    // submitButton.setAttribute('disabled', 'disabled');
 
                     const form = event.target;
-                    const formData = new FormData(form);
+                    const submitBtn = document.getElementById('submitBtn');
+                    const btnText = document.getElementById('btnText');
+                    const btnSpinner = document.getElementById('btnSpinner');
+                    const originalText = btnText.textContent;
 
+                    // 1. Disable tombol & tampilkan spinner
+                    submitBtn.disabled = true;
+                    btnText.classList.add('d-none');
+                    btnSpinner.classList.remove('d-none');
+
+                    const formData = new FormData(form);
                     const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
 
                     try {
@@ -333,15 +345,14 @@
                             });
 
                             Swal.fire({
+                                title: 'Error',
                                 text: 'Pastikan semua data terisi dengan benar!',
                                 icon: 'error',
-                                confirmButtonText: "Ok, got it!",
+                                confirmButtonText: "Ok",
                                 customClass: {
                                     confirmButton: "btn btn-primary"
                                 }
                             });
-
-                            submitButton.removeAttribute('disabled');
 
                             return;
                         }
@@ -359,11 +370,35 @@
 
                         form.reset();
                         // hapus disable pada tombol submit
-                        submitButton.removeAttribute('disabled');
+                        // submitButton.removeAttribute('disabled');
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'Data pengunjung berhasil disimpan!',
+                            confirmButtonText: "Ok",
+                            customClass: {
+                                confirmButton: "btn btn-primary"
+                            }
+                        })
 
-                        toastr.success("Data Berhasil di simpan", "Success");
+                        // toastr.success("Data Berhasil di simpan", "Success");
                     } catch (error) {
                         console.error(error);
+                        Swal.fire({
+                            icon: 'error',
+                            text: 'Terjadi kesalahan saat menyimpan data!',
+                            title: 'Server Error',
+                            confirmButtonText: "Ok",
+                            customClass: {
+                                confirmButton: "btn btn-primary"
+                            }
+                        })
+                    } finally {
+                        // 2. Aktifkan kembali tombol & sembunyikan spinner
+                        submitBtn.disabled = false;
+                        btnText.classList.remove('d-none');
+                        btnSpinner.classList.add('d-none');
+                        btnText.textContent = originalText; // Reset text to original
                     }
                 });
 
